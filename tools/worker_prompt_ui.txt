@@ -1,0 +1,28 @@
+UI / DESCRIPTION TRANSLATION WORKER PROMPT (Legend of Mortal Thai mod)
+=====================================================================
+Substitute {CHUNK_PATH}, {OUT_PATH}, {COUNT}. One agent per chunk. Sonnet.
+
+Do this task YOURSELF in this session. Do NOT spawn, delegate, or launch any background agent/task/Monitor — read, translate, and write the file directly with your own Read and Write tools, then report. NEVER use Bash/shell (echo, printf, cat, heredoc, perl) to create or modify the output file — use ONLY the Write tool.
+
+⚡ SINGLE WRITE: translate ALL {COUNT} entries first, then write the COMPLETE file in ONE Write-tool call. No incremental/batched writes.
+
+You are translating one chunk of a Chinese wuxia RPG's UI text / item & skill descriptions into natural Thai for a fan mod, in the style of classic Thai translations of Chinese martial-arts (กำลังภายใน) novels. This is NOT story dialogue — it is menu labels, stat names, item/book/skill/talent descriptions, and system messages.
+
+SOURCE: Read `{CHUNK_PATH}`. Each line is one entry `CHINESE=ENGLISH`. (Read prepends a line-number+tab — ignore it.) Translate every entry, PRIMARILY from the CHINESE (left of `=`); use the ENGLISH (right of `=`) as a reference. This chunk has EXACTLY {COUNT} entries.
+
+GLOSSARY — READ FIRST and apply every match: C:\ClaudeCode\LegendOfMortalENG\tools\glossary.tsv (terms + 445 names). Core terms: 江湖=ยุทธภพ / 武林=ยุทธจักร / 武功=วิทยายุทธ์ / 内功=วิชากำลังภายใน / 内力=พลังลมปราณ / 轻功=วิชาตัวเบา / 招式=กระบวนท่า / 心法=เคล็ดวิชา / 暗器=อาวุธลับ / 门派=สำนัก / 掌门=เจ้าสำนัก / 弟子=ศิษย์ / 唐门=สำนักถัง / 江湖=ยุทธภพ.
+
+LOCKED STAT / ATTRIBUTE RENDERINGS (use these EXACTLY, they recur game-wide):
+银两=ตำลึงเงิน / 体力=พละกำลัง / 魅力=เสน่ห์ / 学问=ความรู้ / 心相=ภาวะจิต / 命运=โชคชะตา / 性情=อุปนิสัย / 处世=การวางตัว / 修养=การบ่มเพาะตน / 阴阳=หยินหยาง / 刀剑=ดาบและกระบี่ / 拳掌=หมัดและฝ่ามือ / 炼丹=ปรุงตันยา / 毒药=ยาพิษ / 技能=ทักษะ / 佛学=พุทธศาสตร์ / 儒学=ปรัชญาหรู / 医术=วิชาแพทย์ / 道学=เต๋าศาสตร์ / 贡献度=ค่าอุทิศ / 行动力=พลังปฏิบัติการ / 声望=ชื่อเสียง.
+Combat terms: 伤害=ความเสียหาย / 暗器伤害=ความเสียหายอาวุธลับ / 陷阱伤害=ความเสียหายกับดัก / 近战伤害=ความเสียหายประชิด / 平射伤害=ความเสียหายยิงตรง / 抛射伤害=ความเสียหายยิงโค้ง / 爆击率=อัตราคริติคอล / 命中=ความแม่นยำ / 骰子=ลูกเต๋า / 防御等级=ระดับป้องกัน / 全部生命=พลังชีวิตทั้งหมด / 血毒=พิษเลือด / 神经毒=พิษประสาท / 抗毒=ต้านพิษ / 抗麻=ต้านอัมพาต / 异常状态=สถานะผิดปกติ / 中毒=เป็นพิษ / 麻痹=อัมพาต / 连击=โจมตีต่อเนื่อง.
+
+STYLE RULES:
+1. Transliterate ALL proper names (people, sects, places, item names, skill/book titles) into THAI script per the glossary; for names not in the glossary, transliterate the Mandarin sound naturally and consistently. Never leave pinyin or English.
+2. Register: for descriptive sentences that address the player (你) or are in a character's voice, use wuxia pronouns — 你=เจ้า, 我=ข้า, 他=เขา, 她=นาง, respectful=ท่าน. NEVER the modern pronouns ฉัน / เธอ / คุณ / ผม / ดิฉัน / หม่อมฉัน, and NEVER the modern particles ครับ / ค่ะ. For pure UI labels/buttons/stat names, use concise natural Thai (no pronoun needed).
+3. Elevated, literary-but-clear tone. Item/skill descriptions read like a wuxia-novel item catalog.
+4. Preserve EXACTLY (copy through unchanged): literal `\n` (backslash+n), `<size\=NN>` and `<color=#...>`/`</color>`/`</size>` tags, numbers, `{0}`/`{1}` placeholders, book/skill title brackets 《...》 (translate the text inside, keep the brackets), item-name brackets 【...】 (translate/transliterate inside, keep brackets). Mode tags: translate `[决斗]`→`[ดวล]` and `[战役]`→`[ศึก]` consistently; keep other `[...]` brackets.
+5. One single line per value (use `\n` for internal line breaks, never a real newline). NEVER alter the CHINESE key — field 1 must be the source Chinese byte-for-byte, with NO English word leaking into it.
+
+OUTPUT: Write UTF-8 (no BOM) to `{OUT_PATH}`, one line per entry: `CHINESE<TAB>THAI` (one real TAB byte, ASCII 0x09 — NOT `=`). No headers/comments/blank lines. Exactly {COUNT} lines, every source entry once, in source order. End with a trailing newline. ONE single Write call.
+
+Reply with ONLY: number of entries written + 2 example pairs.

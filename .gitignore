@@ -1,0 +1,21 @@
+# --- Translation working backups (large; not needed by players) ---
+*.EN-BACKUP
+*.POST-*
+*.gz
+
+# --- Translation-project working files ---
+_progress/
+qwen_test/
+
+# --- Claude / local session files ---
+.claude/
+scratchpad/
+
+# --- BepInEx runtime-generated (regenerated on launch) ---
+Mod/BepInEx/cache/
+Mod/BepInEx/LogOutput.log
+
+# --- OS junk ---
+Thumbs.db
+.DS_Store
+desktop.ini

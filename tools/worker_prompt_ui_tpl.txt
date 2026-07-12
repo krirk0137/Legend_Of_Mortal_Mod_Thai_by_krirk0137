@@ -1,0 +1,22 @@
+UI-TEMPLATE TRANSLATION WORKER (Legend of Mortal Thai mod) — templated stat/quest UI strings
+============================================================================================
+Substitute {IN_PATH}, {OUT_PATH}, {COUNT}. One agent per file. Sonnet.
+
+Do this task YOURSELF. Do NOT delegate/spawn. NEVER use Bash/shell to write the output — use ONLY the Write tool. Translate ALL {COUNT} lines, then write the COMPLETE output in ONE single Write call.
+
+INPUT: Read `{IN_PATH}`. Each line is: `<CHINESE_KEY><TAB><ENGLISH_VALUE_TEMPLATE>`. The Chinese key is CONTEXT ONLY (tells you what the stat/term means). You translate the ENGLISH_VALUE_TEMPLATE (field 2) into Thai.
+
+The template contains the sentinel character `§` (U+00A7) wherever a NUMBER was removed.
+⚡ CRITICAL: Your Thai output MUST contain EXACTLY the same number of `§` characters as the input template, in the corresponding positions (they are placeholders that get real numbers substituted back later). Never add, drop, reorder, or translate `§`. Copy each `§` through as-is.
+Also preserve EXACTLY: literal `\n` (backslash+n), `<size\=§>`/`</size>`/`<color=#..>` tags, 《...》 and 「...」 and [...] brackets, `%`, `+`, `-`, `>\=`, `/`, punctuation.
+
+OUTPUT: Write UTF-8 (no BOM) to `{OUT_PATH}`: ONE Thai template per input line, in the SAME ORDER, EXACTLY {COUNT} lines. NOTHING ELSE on each line (just the Thai template — do NOT echo the Chinese key or the English). Trailing newline at end. ONE Write call.
+
+Register: neutral UI Thai (these are stat labels/quest conditions, not dialogue). If a 2nd person appears use เจ้า, never ฉัน/เธอ/คุณ/ผม/ครับ/ค่ะ.
+
+PINNED TERM DICTIONARY — use these EXACT Thai renderings (they repeat thousands of times; consistency is mandatory):
+AP / 行动力 → พลังปฏิบัติการ | Mood / 心相 → ภาวะจิต | Blood / 血 → เลือด | Qi / 气 → ชี่ | Silver / 银两 → ตำลึงเงิน | "Get § Silver" → ได้รับเงิน § ตำลึง | Contribution / 贡献度 → ค่าอุทิศ | "contribution threshold" → เกณฑ์ค่าอุทิศ | "Your contribution this month is §" → ค่าอุทิศเดือนนี้ของเจ้าคือ § | Realm / 境界 → ภูมิ | Verbal Power / 嘴力 → พลังวาจา | Sect size / 门派规模 → ขนาดสำนัก | Sect Assets / 门派资产 → ทรัพย์สินสำนัก | Round / 回合 → ยก | qi Cost / 消耗气 → ใช้ชี่ | Knowledge / 学问 → ความรู้ | Physical Strength / Stamina / 体力 → พละกำลัง | Sword / 刀剑 → ดาบและกระบี่ | Qinggong / 轻功 → วิชาตัวเบา | "Yin and Yang" / 阴阳 → หยินหยาง | Cultivation / 修养 → การบ่มเพาะตน | Internal Cultivation / Internal Energy / 内功 / 内力 → วิชากำลังภายใน | Fist and Palm / 拳掌 → หมัดและฝ่ามือ | Charisma / 魅力 → เสน่ห์ | Skill / 技能 → ทักษะ | Buddhism → พุทธศาสตร์ | Confucianism → ปรัชญาหรู | Daoism → เต๋าศาสตร์ | Medicine → วิชาแพทย์ | Lv → Lv | Currently / 目前 → ปัจจุบัน | Achieved / 已达成 → สำเร็จแล้ว | "Not Achieved" / 未达成 → ยังไม่สำเร็จ | "Nerve Toxin Buildup" / 麻痹累积值 → ค่าสะสมพิษประสาท | "Blood Toxin Buildup" / 毒性累积值 → ค่าสะสมพิษเลือด | Paralyze / 麻痹 → อัมพาต | Poison / Posion / 毒 → พิษ | "On reaching §" → เมื่อสะสมถึง § | "Buildup clears upon trigger" → เมื่อกำเริบแล้วจะล้างค่าสะสม | "abnormal status" / 异常状态 → สถานะผิดปกติ | "Hit Rate" / 命中率 → อัตราเข้าเป้า | Attribute / 属性 → คุณสมบัติ | "Forge Points" → แต้มตีเหล็ก | "Alchemy Points" → แต้มปรุงตันยา | Refund → คืน | Damage / 伤害 → ความเสียหาย | "Critical" / 爆击 → คริติคอล | Ending / 结局 → ตอนจบ | "Equipment Level" / 装备等级 → ระดับอุปกรณ์ | "Combo Strikes" / 连击 → โจมตีต่อเนื่อง
+Month labels: Early X → ต้นเดือนX | Mid X → กลางเดือนX | Late X → ปลายเดือนX | "Year §" → ปีที่ § | January→มกราคม February→กุมภาพันธ์ March→มีนาคม April→เมษายน May→พฤษภาคม June→มิถุนายน July→กรกฎาคม August→สิงหาคม September→กันยายน October→ตุลาคม November→พฤศจิกายน December→ธันวาคม.
+For any term not listed: translate naturally to Thai, transliterate proper names (see C:\ClaudeCode\LegendOfMortalENG\tools\glossary.tsv if a name appears).
+
+Reply with ONLY: number of lines written + 2 example outputs.
