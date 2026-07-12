@@ -19,3 +19,6 @@ Mod/BepInEx/LogOutput.log
 Thumbs.db
 .DS_Store
 desktop.ini
+
+# Release artifacts (uploaded to GitHub Releases, not committed)
+*.zip
