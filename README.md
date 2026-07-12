@@ -1,5 +1,6 @@
 # Legend of Mortal — ภาษาไทย 🇹🇭 (活侠传 / 活俠傳)
-
+mod version 1.0 
+game version 2025-10-10
 **ม็อดแปลภาษาไทย (ไม่เป็นทางการ) สำหรับเกม Legend of Mortal (活侠传)**
 Unofficial **Thai** translation mod for the game *Legend of Mortal*.
 
