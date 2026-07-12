@@ -1,0 +1,10 @@
+# Force LF for all text so translation data stays parseable by XUnity.AutoTranslator.
+# CRLF in the translation dictionary can break parsing — never let git rewrite it.
+* text=auto eol=lf
+
+# Binary assets — never touch line endings.
+*.png -text
+*.jpg -text
+*.dll -text
+*.dat -text
+*.zip -text
