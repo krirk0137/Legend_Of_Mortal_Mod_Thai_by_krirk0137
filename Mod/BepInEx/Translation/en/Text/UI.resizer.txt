@@ -720,11 +720,11 @@
 /[UI]/MainUI/Layer_1/ReadyText/Left=AutoResize(true,16,38)
 /[UI]/MainUI/Layer_1/ReadyText/Left=UGUI_HorizontalOverflow(overflow)
 /[UI]/MainUI/Layer_1/ReadyText/Left=TMP_Overflow(Overflow)
-/[UI]/MainUI/Layer_1/ReadyText/Left=TMP_Alignment(Middle)
+/[UI]/MainUI/Layer_1/ReadyText/Left=TMP_Alignment(MidlineLeft)
 /[UI]/MainUI/Layer_1/ReadyText/Right=AutoResize(true,16,38)
 /[UI]/MainUI/Layer_1/ReadyText/Right=UGUI_HorizontalOverflow(overflow)
 /[UI]/MainUI/Layer_1/ReadyText/Right=TMP_Overflow(Overflow)
-/[UI]/MainUI/Layer_1/ReadyText/Right=TMP_Alignment(Middle)
+/[UI]/MainUI/Layer_1/ReadyText/Right=TMP_Alignment(MidlineRight)
 
 ##############################################
 ##Main Map

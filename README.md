@@ -1,8 +1,10 @@
 # Legend of Mortal — ภาษาไทย 🇹🇭 (活侠传 / 活俠傳)
-mod version 1.1
+mod version 1.2
 game version 2025-10-10
 **ม็อดแปลภาษาไทย (ไม่เป็นทางการ) สำหรับเกม Legend of Mortal (活侠传)**
 Unofficial **Thai** translation mod for the game *Legend of Mortal*.
+
+🆕 **v1.2** (2026-07-14) — แก้อาการ **คำปนอังกฤษ** (ปิด entry อักษรจีนตัวเดียวที่ทำให้แปลปนกัน) + เพิ่ม **ฟอนต์ไทย TextMeshPro (Kanit)** แก้ตัวหนังสือเป็น □ ที่ชื่อตัวละคร/ตัวเลือก/UI สถานะ (ตั้ง `FallbackFontTextMeshPro=Kanit_sdf` ให้แล้ว) + แก้ error `UI.resizer`
 
 🆕 **v1.1** (2026-07-13) — แปล **บทเปิด (Story 01)** ใหม่ทั้งบท: ชื่อเฉพาะที่เคยหลุดเป็นอังกฤษ (Tang Sect / Sichuan …) เป็นภาษาไทยครบ (สำนักถัง / เสฉวน …) และเก็บกวาดสำนวนให้เป็นกำลังภายในทั้งเกม (ครับ / ค่ะ / เธอ → ขอรับ / ข้า / นาง)
 
@@ -46,6 +48,7 @@ https://www.facebook.com/groups/1397983044265668/?multi_permalinks=1969429063787
 | ฉบับแปลอังกฤษที่ใช้เป็นฐาน · English base translation | **velvetcakes1** — https://github.com/velvetcakes1/LoM_en |
 | ตัวเกม · Original game | 活侠传 / Legend of Mortal (卧龙工作室 / TeeTee Games) |
 | เครื่องมือ · Tooling | [BepInEx](https://github.com/BepInEx/BepInEx) · [XUnity.AutoTranslator](https://github.com/bbepis/XUnity.AutoTranslator) |
+| ฟอนต์ไทย TMP · Thai TMP font | **Kanit** — Cadson Demak / Google Fonts ([SIL OFL](https://openfontlicense.org)) |
 
 > ในเกมมีการใส่เครดิตไว้ที่หน้า **"ขอบคุณที่ร่วมเล่น"** (Thanks for playing) ตอนจบเกมด้วย
 

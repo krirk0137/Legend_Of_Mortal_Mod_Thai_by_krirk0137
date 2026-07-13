@@ -1,6 +1,7 @@
 # --- Translation working backups (large; not needed by players) ---
 *.EN-BACKUP
 *.POST-*
+*.PRE-*
 *.gz
 
 # --- Translation-project working files ---
