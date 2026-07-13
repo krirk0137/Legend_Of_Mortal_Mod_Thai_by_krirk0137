@@ -1,10 +1,38 @@
 # Legend of Mortal — ภาษาไทย 🇹🇭 (活侠传 / 活俠傳)
-
+mod version 1.0 
+game version 2025-10-10
 **ม็อดแปลภาษาไทย (ไม่เป็นทางการ) สำหรับเกม Legend of Mortal (活侠传)**
 Unofficial **Thai** translation mod for the game *Legend of Mortal*.
 
 > แปลจากภาษาจีนเป็นไทยแบบครบทั้งเกม — เนื้อเรื่องทั้ง 17 บท, เมนู, ระบบ, ไอเทม, สกิล, พรสวรรค์, คำอธิบายตัวละคร และ UI ทั้งหมด
 > ใช้สำนวนแบบนิยายกำลังภายใน (ข้า / เจ้า / ท่าน) และทับศัพท์ชื่อเฉพาะเป็นไทยตลอดทั้งเกม
+---
+note แปลด้วย opus4.8 + sonnet 5 
+อันนี้เพิ่งไปเจอวิธีแปลด้วย ai มา ไม่น่าเสียเวลาแปลเองเลย ถถถถถถ
+https://www.facebook.com/groups/1397983044265668/?multi_permalinks=1969429063787727&hoisted_section_header_type=recently_seen&__cft__[0]=AZatCtnLFni_fKRIAEcRuC6MU6eBNSbRvhY0MQXxvtkotKByze5XcYB78GaPTAsrBnxL3c1QxJLtD5ObhlPbcJF_eAzsLhY4vKtUYJj_PQu0wX4WZDf_1H4YuBVrQq0aRmZqHcTMekxr1s6b5MS9pWeD&__tn__=%2CO%2CP-R
+    " 
+    Tanakit Kongboonvijit
+     ·
+    27 มกราคม
+     ·
+    แนะนำเกมส์ จอมยุทธ หัวร้อน⭐⭐⭐⭐⭐
+    legend of mortal (ตำนานมนุษย์)
+    
+    สนุกมากเลยนะครับ เป็นเกมส์ที่ต้องวางแผน ใช้สมอง + ใช้ดวง ในการเล่นแถมเนื้อเรื่องสนุกมากนะครับ
+    
+    📌 อัพเดต ใช้ แปลเกมอัตโนมัติด้วย XUnity.AutoTranslator เป็นภาษาไทยได้นะครับ
+    https://shorturl.asia/aAGgk ( ผมย่อลิ้ง วิธีใช้ให้นะครับ )
+    
+    การตั้งค่า
+    [General]
+    Language=th
+    FromLanguage=zh-TW
+    
+    แนะนำ FromLanguage=zh-TW (จีนไต้หวันตัวเต็ม) ดีที่สุดนะครับ (เพราะเกมนี้ผลิตโดยทีมงานไต้หวันนะครับ)
+    
+    กด MaxCharactersPerTranslation=2000 (ตั้งค่าการแปลให้มากที่สุดต่อหน้าด้วยนะครับ ขอบคุณพี่Adam Budablase สำหรับวิธีด้วยนะครับ
+    
+    "
 
 ---
 
