@@ -3,6 +3,46 @@
 Handoff notes so a fresh session can continue with minimal context. See also `CLAUDE.md`
 (pipeline/rules) and the memory files (project decisions).
 
+---
+# ✅✅ v1.1 DONE (2026-07-13) — Story 01 re-translated + game-wide register cleaned ✅✅
+Both v1.1 QA problems are FIXED and applied to the live file. Current good state = snapshot **`.POST-V11`** (keydiff vs `.EN-BACKUP` = 0). **Only zip rebuild + optional git commit + in-game test remain.**
+
+### ✅ PROBLEM 1 FIXED — Story 01 re-translated whole (was 773 English-name leaks)
+Re-translated Story 01 (orig lines **18494–22173**, 3675 entries) from scratch via the mature worker pipeline. **Result: name-leak 773→0, register 0, term-slips fixed (江湖→ยุทธภพ, 暗器→อาวุธลับ).** keydiff=0. Snapshot `.POST-STORY01v11`.
+- **Chunking lesson (NEW):** the 200-line chunk c01_02 (35 KB) **hit the 64k output-token ceiling** even though c01_01 (31 KB) passed — the pass/fail line for Story-01-density prose is ~33 KB source. Fix that worked: **re-split the remainder BY BYTES ≤27 KB/chunk** (not by line count — line count doesn't bound bytes; a 150-line chunk hit 38 KB). Did the whole chapter as c01_00,c01_01 (200-line, done before the ceiling hit) + **23 byte-capped chunks c01b_00..c01b_22**, 3–6/wave, worker prompt `tools/worker_prompt_story01.txt` (short launch prompt points to it). All 25 chunks PASS per-chunk verify (`_progress/story01/verify_chunk.sh <base>` — key-diff via extract_keys, latin-in-key is a WARNING not fail since `<size\=NN>` tags + literal `\n` + legit source-English keys like `Present` all false-positive it). Assembled `_progress/story01/story01_gold.tsv` = 3675, key-diff vs source = 0.
+- **Applied RANGE-RESTRICTED (NOT global):** apply_thai.pl is global-by-key and Story-01 keys duplicate ~4× game-wide (好。→202 lines, 是。→144), so a global apply would clobber ~12k out-of-range lines. Instead: sliced the file into head(1–18493)+mid(18494–22173)+tail, applied gold to **mid only**, re-concatenated. head/tail byte-identical to before (verified). This is the SAFE way to re-apply one chapter into a finalized file.
+- Glossary additions this pass (now **455**): 点苍=เตี่ยนชาง, 点苍派, 练功塔=หอฝึกวิทยายุทธ์, 南宫(standalone)=หนานกง, 彼岸仙香, 丐帮=พรรคขอทาน, 沧帮=พรรคชางปัง(match game-wide 39×), 白鲨帮=พรรคฉลามขาว, 石帮主=เจ้าพรรคสือ, 牛长寿=หนิวฉางโซ่ว.
+
+### ✅ PROBLEM 2 FIXED — game-wide register cleanup (was ครับ214/ค่ะ90/เธอ128/หม่อมฉัน25)
+After re-translating Story 01, **เธอ dropped 128→0 entirely** (all 128 were in the Story-01 pilot). Remaining ครับ/ค่ะ/หม่อมฉัน (many in Story02-17 — the old per-chapter QA reported 0 because of the perl-CSD false-0 gotcha; they were real) cleaned via staged byte-level replace on the whole file (values only; keys are Chinese so untouched, keydiff=0):
+```
+perl -i -pe 's/หม่อมฉัน/ข้า/g'      # pronoun
+perl -i -pe 's/เจ้าค่ะ/ขอรับ/g'     # special-case FIRST (avoids เจ้าขอรับ)
+perl -i -pe 's/ค่ะ/ขอรับ/g'
+perl -i -pe 's/ครับ/ขอรับ/g'
+```
+259 lines changed. Verified: no `ขอรับขอรับ`/`เจ้าขอรับ`/`ขอขอรับ`; `ข้าข้า`=61 are PRE-EXISTING stammers (0 added); reads natural (ขออภัยขอรับ/รู้แล้วขอรับ/สวัสดีตอนเช้าขอรับ). **Final game-wide: ครับ=ค่ะ=เธอ=หม่อมฉัน=ดิฉัน = 0.**
+
+### ✅ FULL-FILE QA (2026-07-13, post-v1.1) — CLEAN
+name-leak per partition: Menus=2, UI=0, Story01=0, Story02-17=1 — the 3 residuals are FALSE POSITIVES (keyboard keys `[ESC]/[S]/[L]/[A]`, and the translator-credit line `感谢游玩`). Register all 0. ผม/คุณ/ฉัน remain false positives only (เส้นผม/ขอบคุณ-บุญคุณ/ฉันมิตร).
+
+### ⚠️ TOOLING GOTCHA (still true — DO NOT REPEAT)
+**Scan Thai with `grep -cP 'คำ' file`.** perl `-CSD -ne '... =~ /คำไทย/'` WITHOUT `use utf8;` gives **FALSE 0**. Byte-level replace `perl -i -pe 's/ก/ข/g'` (no -C) is fine (same UTF-8 bytes both sides). This gotcha is exactly why the old QA missed the Story02-17 register leaks.
+
+### ⬜ REMAINING for v1.1 (all cheap, NO workers)
+1. Rebuild the Mod zip → **v1.1** (was `LegendOfMortal-Thai-by-Krirk0137-v1.0.zip` at repo root, gitignored).
+2. (optional) git commit + push + tag `v1.1` (user handles GitHub README — fetch+merge, don't clobber).
+3. In-game test the opening (Story 01) — user does this.
+
+### FILE / REPO STATE (post-restructure 2026-07-13)
+- Dict: `Mod/BepInEx/Translation/en/Text/Translation zh-CN to en.txt` (26MB, LF, no BOM — user confirmed: one giant file, Notepad hangs, use VS Code). Anchor `*.EN-BACKUP`, rolling `*.POST-OPT` (same folder, gitignored).
+- Glossary `tools/glossary.tsv` (445). Prompts: `tools/worker_prompt_gold.txt` (story), `worker_prompt_ui.txt`, `worker_prompt_ui_tpl.txt`.
+- Git: repo root = `C:\ClaudeCode\LegendOfMortalENG` (Mod/ moved to root; was `LoM_en-main/LoM_en-main/Mod`). Remote `origin` = `github.com/krirk0137/Legend_Of_Mortal_Mod_Thai_by_krirk0137`, branch `main`, tag `v1.0` pushed. User edits README on GitHub web — DON'T clobber; fetch+merge. Release zip built at repo root `LegendOfMortal-Thai-by-Krirk0137-v1.0.zip` (gitignored). `.gitignore` excludes backups/_progress/qwen_test/.claude/*.zip.
+- `.EN-BACKUP` line-alignment is intact (line-restore/keydiff still valid).
+
+---
+
+
 ## ✅ Done so far
 - **Menu / UI** → Thai.
 - **Story 01** (lines 18493–22173, 3,677 entries) → translated in **gold style** and applied. QA passed (0 English leaks; register ~100% ข้า/เจ้า; glossary-consistent).

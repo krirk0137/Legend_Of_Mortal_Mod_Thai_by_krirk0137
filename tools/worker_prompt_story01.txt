@@ -1,0 +1,36 @@
+STORY 01 RE-TRANSLATION WORKER RULES (v1.1). Your launch message gives you 4 values:
+CHUNK_PATH, OUT_PATH, COUNT, CHECKPOINT. Follow every rule below exactly.
+
+Do this task YOURSELF in this session. Do NOT spawn, delegate, or launch any background agent/task/Monitor — read, translate, and write the file directly with your own Read and Write tools, then report. NEVER use Bash/shell (echo, printf, cat, heredoc, perl) to create or modify the output file — use ONLY the Write tool.
+
+⚡ SINGLE WRITE: Do NOT write the output file incrementally or in batches. Translate ALL COUNT entries fully first, then write the COMPLETE file in ONE SINGLE Write-tool call at the end. One Write, all COUNT lines.
+
+You are translating one chunk of a Chinese wuxia RPG's dialogue into natural, literary Thai for a fan mod — in the style of classic Thai translations of Chinese martial-arts (กำลังภายใน) novels.
+
+SOURCE: Read CHUNK_PATH. Each real entry is one line `CHINESE=ENGLISH`. (Read prepends a line-number+tab — ignore it.) Skip `//` comment lines, blank lines, and ANY line that has no `=` (e.g. a bare `！` or a `#(...)` note). Translate every real entry.
+Translate PRIMARILY from the CHINESE (left of `=`); use the ENGLISH (right of `=`) only as a reference to resolve ambiguity.
+
+This chunk has EXACTLY COUNT real entries. The FINAL source entry you must reach (checkpoint) is the line whose key begins with CHECKPOINT. Make sure your output includes a translation for that final entry and has exactly COUNT lines.
+
+GLOSSARY — follow EXACTLY. The FULL authoritative glossary (terms + names) is at
+C:\ClaudeCode\LegendOfMortalENG\tools\glossary.tsv — READ IT FIRST and apply every match. Core terms:
+江湖=ยุทธภพ / 武林=ยุทธจักร / 武功=วิทยายุทธ์ / 内功=วิชากำลังภายใน / 内力=พลังลมปราณ / 轻功=วิชาตัวเบา / 招式=กระบวนท่า / 心法=เคล็ดวิชา / 暗器=อาวุธลับ / 门派=สำนัก / 掌门=เจ้าสำนัก / 帮主=เจ้าพรรค / 弟子=ศิษย์ / 首席弟子=ศิษย์เอก / 师父=อาจารย์ / 大师兄=พี่ใหญ่ / 二师兄=พี่รอง / 三师兄=พี่สาม / 师妹=ศิษย์น้องหญิง / 小师妹=ศิษย์น้องคนเล็ก / 大侠=ท่านจอมยุทธ์ / 前辈=รุ่นพี่ / 在下=ข้าน้อย / 成仙=บรรลุเซียน / 四川=เสฉวน / 蜀中=ซู่จง / 唐门=สำนักถัง / 唐布衣=ถังปู้อี / 唐家大院=คฤหาสน์ตระกูลถัง / 练功塔=หอฝึกวิทยายุทธ์ / 点苍=เตี่ยนชาง / 点苍派=สำนักเตี่ยนชาง / 赵活=จ้าวหัว / 锦香宫=จิ่นเซียงกง / 火闪电=สายฟ้าเพลิง / 龙湘=หลงเซียง / 叶云舟=เย่หวินโจว / 申屠龙=เซินถูหลง / 彼岸仙香=ธูปเซียนฝั่งนิพพาน / 丐帮=พรรคขอทาน / 飞石帮=พรรคก้อนหินบิน / 沧帮=พรรคชางปัง / 白鲨帮=พรรคฉลามขาว / 石帮主=เจ้าพรรคสือ
+Surnames stay constant: 唐=ถัง / 南宫=หนานกง / 段=ตวน / 叶=เย่ / 刘=หลิว / 上官=ซ่างกวน / 魏=เว่ย / 赵=จ้าว / 龙=หลง / 石=สือ.
+
+STYLE RULES:
+1. Wuxia register: pronouns ข้า / เจ้า / ท่าน / ข้าน้อย (พี่/ท่าน for respect). NEVER use the modern pronouns ฉัน / เธอ / คุณ / ผม / ดิฉัน / หม่อมฉัน, and NEVER the modern speech particles ครับ / ค่ะ. Specifics: a female character's humble self-reference (妾身 / 我 / 本宫) is still ข้า (never ดิฉัน/หม่อมฉัน); a plain acknowledgment 是。is ขอรับ (never ครับ/ครับผม); 3rd-person 她 = นาง (never เธอ); 2nd-person 你 = เจ้า (never คุณ/เธอ).
+2. Transliterate ALL proper names (people, sects, places) into THAI script — never leave English or pinyin. This is the game's OPENING chapter and MUST NOT contain any English words in the Thai values (a prior draft wrongly left "Tang Sect", "Sichuan", "Diancang", "Training Pagoda" etc. in English — do NOT do that; use the glossary Thai forms). For names not in the glossary, transliterate the Mandarin sound into Thai naturally and consistently.
+3. Elevated, literary wuxia tone — not casual modern Thai.
+4. Preserve EXACTLY: literal `\n` (backslash+n), `<...>` tags, numbers, `{0}`/`{1}` placeholders.
+5. One single line per value (use `\n` for internal breaks, never a real newline). Never alter the CHINESE key. NEVER let any English word from the reference translation leak into the CHINESE key — the key (field 1) must be pure copied Chinese, byte-for-byte from the source.
+
+CRITICAL — `<size\=NN>` TAG HANDLING (if any entry has it):
+- If the CHINESE KEY is wrapped like `<size\=24>...</size>`, your OUTPUT key must keep that EXACT wrapper unchanged — do NOT strip it, do NOT change the key's number.
+- For the VALUE's size tag: use the SAME `<size\=NN>` number that the SOURCE ENGLISH value uses (mirror the source value).
+- The split point between key and value is the `=` after the key's closing `</size>` — NOT the `=` inside a `<size\=NN>` tag. A naive "replace the first =" is WRONG.
+
+OUTPUT: Write UTF-8 (no BOM) to OUT_PATH, one line per entry: `CHINESE<TAB>THAI` (single real tab). No headers/comments/blank lines. Every source entry appears exactly once. End the file with a trailing newline. ONE single Write-tool call of all COUNT lines.
+CRITICAL — OUTPUT DELIMITER: your OUTPUT must use a literal TAB character (ASCII 0x09) between Chinese and Thai, NOT `=`. The source's `=` is SOURCE format only.
+CRITICAL — NO EXTRA LINES: write ONLY translated entries, exactly COUNT lines. Do NOT add any placeholder/marker/note line.
+
+Reply with ONLY: number of entries written + 2 example pairs.
