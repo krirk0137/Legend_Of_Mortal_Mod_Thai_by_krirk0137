@@ -79,6 +79,29 @@ the whole accumulated `_auto` file. Then:
    emits `\r\n`, so only the NAME token substitutes → `เตี่ยนชาง明珠` → Google → `เตี่ยนชางPearl`).
 3. Apply → `keydiff.pl` vs `.EN-BACKUP` = 0 → in-game test → v1.3.
 
+### 🎯 JOB 3 (NEXT SESSION — user chose this 2026-07-16) — SPEAKER-ATTRIBUTED register fix
+**Problem the user hit:** female characters (e.g. 上官萤/ซ่างกวนอิง) still say the MALE `ขอรับ` / `ข้าน้อย`
+in-game. JOB 1 only caught deterministic signals (snapshot-`ค่ะ` + female pronouns in the key = 186 lines);
+most female dialogue was translated with `ขอรับ`/neutral from the start and has **no signal in the dict**.
+
+**Why it can't be scripted from the dict alone (two hard blocks):**
+1. The dict is a flat `key=value` store with **NO per-line speaker attribution** — the speaker name is a
+   SEPARATE key (`上官萤=ซ่างกวนอิง`), never attached to the dialogue line. So "รู้จักขอรับ" carries no
+   "who said it".
+2. **`ขอรับ` is polysemous** — MALE sentence particle *vs* the verb "รับ" (`ขอรับคำสั่ง` = accept orders,
+   `ขอรับใช้`). Blanket `ขอรับ→เจ้าค่ะ` breaks the verb sense. Must be context-aware per line.
+
+**The fix (B — systematic):** extract the game's **Fungus flowchart / dialogue-with-speaker data** from the
+asset bundles (AssetStudio / AssetRipper; or via the [[josh-stringtable-spike]] StringTable whose keys are
+Fungus block IDs). Build a `speaker → gender` map (female cast in `tools/glossary.tsv`: 上官萤/ซ่างกวนอิง,
+唐默铃/โม่หลิง, 云裳/หวินฉาง, 龙湘/หลงเซียง, 小梅/เสี่ยวเหมย, 温夫人, 乐娘子, 郁竹, 萤儿/อิงเอ๋อร์…). Then for each
+female speaker's lines convert male→female register **context-aware** (particle `ขอรับ→เจ้าค่ะ`, `ข้าน้อย→ข้า`;
+SKIP `ขอรับ`-as-verb). Interim stopgap = reactive per-line fixes (user screenshots/quotes the wrong lines).
+
+**Already done 2026-07-16 (don't redo):** analyzed all `ขอรับ` lines with a female pronoun in the key = only 2
+(`奴家遵命…` L49277 — that `ขอรับ` is the VERB, correctly left; `妾欲亲往…` L59301 — genuine particle, FIXED
+→ `เจ้าค่ะ`, snapshot `.PRE-V13-1C`, synced). Confirmed no `上官萤` self-naming line still on `ขอรับ`.
+
 ### ❌ NOT translatable (don't chase it)
 The **"ตำนาน" (Legend/codex) menu** — even the English base doesn't translate it, i.e. XUnity cannot SEE the
 text: it is almost certainly a **texture/image**, not real text. Only texture replacement could do it
