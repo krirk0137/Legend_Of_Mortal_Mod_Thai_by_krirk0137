@@ -10,6 +10,23 @@ Thai TMP font Kanit_sdf + resizer fix). Live file = current `Translation zh-CN t
 Two jobs remain, in this order:
 
 ### ⭐ JOB 1 (BUG — user caught it) — GENDERED REGISTER: women are speaking like men
+
+> **✅ STAGE A DONE (2026-07-16)** — deterministic, line-aligned, verified. Snapshot `.POST-V13-1A`,
+> synced to live game. `tools/v13_job1a.py` (in scratchpad) using snapshot `.POST-STORY01v11` as the
+> pre-sweep female-`ค่ะ` signal: **BUG 1a** 72 lines `ขอรับ`→`เจ้าค่ะ` (all female-ack lines);
+> **BUG 1b** 102 lines `ข้าน้อย`→`ข้า` (101 female-pronoun keys 妾身/奴家/小女子 + 1 female-ack overlap).
+> Verified: keys-vs-PRE-V13 diff = **0** (touched values only), `เจ้าค่ะ`=72, `ครับ`=0, bare `ค่ะ`=0,
+> `ข้าน้อย` 887→785, female-pronoun lines still holding `ข้าน้อย` = 0. (Note: keydiff-vs-`.EN-BACKUP`=97
+> is PRE-EXISTING v1.2 comment-outs, not this edit — verify against `.PRE-V13` instead.)
+> **✅ STAGE B DONE (2026-07-16)** — `tools/v13_job1b.py`, snapshot `.POST-V13-1B`, synced. Data-driven:
+> analyzed all 542 non-male-marked `ข้าน้อย` candidates → only DEFENSIBLE female signals were extended
+> female SELF-reference terms in the key (`民女`×5, `妾`×5) + `上官萤` self-naming ×1 = **11 lines**
+> `ข้าน้อย`→`ข้า`, EXCLUDING any line with a male marker (`在下`/`小人`/`小生`/`妻妾`) to kill false positives
+> (`妻妾成群…男人的梦想`, `赵活…只属上官萤` = MALE mentioning a woman). **REJECTED signals:** `หนู`-in-value
+> (it's 2nd-person `คุณหนู`, not self-ref) and female cast-names-mentioned-by-males. The remaining ~477
+> `ข้าน้อย` have NO gender signal in the key → left as male (safe default; forcing them would inject errors).
+> `ข้าน้อย` 887→774. **JOB 1 COMPLETE.** Next = JOB 2 (gap-fill).
+
 The locked style treated register as gender-neutral. It is **not**. Two distinct male-only forms leaked
 onto female characters:
 
@@ -109,7 +126,7 @@ name-leak per partition: Menus=2, UI=0, Story01=0, Story02-17=1 — the 3 residu
 3. In-game test the opening (Story 01) — user does this.
 
 ### FILE / REPO STATE (post-restructure 2026-07-13)
-- Dict: `Mod/BepInEx/Translation/en/Text/Translation zh-CN to en.txt` (26MB, LF, no BOM — user confirmed: one giant file, Notepad hangs, use VS Code). Anchor `*.EN-BACKUP`, rolling `*.POST-OPT` (same folder, gitignored).
+- Dict: `Mod/BepInEx/Translation/th/Text/Translation zh-CN to en.txt` (26MB, LF, no BOM — user confirmed: one giant file, Notepad hangs, use VS Code). Anchor `*.EN-BACKUP`, rolling `*.POST-OPT` (same folder, gitignored).
 - Glossary `tools/glossary.tsv` (445). Prompts: `tools/worker_prompt_gold.txt` (story), `worker_prompt_ui.txt`, `worker_prompt_ui_tpl.txt`.
 - Git: repo root = `C:\ClaudeCode\LegendOfMortalENG` (Mod/ moved to root; was `LoM_en-main/LoM_en-main/Mod`). Remote `origin` = `github.com/krirk0137/Legend_Of_Mortal_Mod_Thai_by_krirk0137`, branch `main`, tag `v1.0` pushed. User edits README on GitHub web — DON'T clobber; fetch+merge. Release zip built at repo root `LegendOfMortal-Thai-by-Krirk0137-v1.0.zip` (gitignored). `.gitignore` excludes backups/_progress/qwen_test/.claude/*.zip.
 - `.EN-BACKUP` line-alignment is intact (line-restore/keydiff still valid).
@@ -214,7 +231,7 @@ Also still English (optional, later): `UI Changes` (6137–18492), and non-story
 
 ## 🔁 Pipeline to translate one Story (repeat per chapter)
 Paths use the session scratchpad `$SP` and the game file `$FILE`
-(`.../Mod/BepInEx/Translation/en/Text/Translation zh-CN to en.txt`).
+(`.../Mod/BepInEx/Translation/th/Text/Translation zh-CN to en.txt`).
 
 1. **Extract + chunk** the story's line range (from the pristine `$FILE.EN-BACKUP` for clean CN=EN):
    ```

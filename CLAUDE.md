@@ -10,7 +10,9 @@ An **unofficial translation mod** for the Unity game **Legend of Mortal (活侠�
 - **XUnity.AutoTranslator** — hooks in-game text at runtime and replaces it using a translation dictionary, falling back to Google Translate for anything not in the dictionary
 - **XUnity.ResourceRedirector** — swaps translated **textures** (character-name images, etc.)
 
-The upstream project translates the game **zh-CN → English**. This repo is being extended to add **Thai**. **Locked strategy (supersedes the earlier "English-primary + Thai-accent" idea): translate Chinese-primary** — the CN key is the source of truth, the English value is reference-only. Everything becomes Thai (menus, dialogue, names): wuxia register (ข้า/เจ้า/ท่าน/ข้าน้อย — never ฉัน/เธอ/คุณ/ผม/ดิฉัน), proper names transliterated to Thai script per `tools/glossary.tsv`. See `NEXT_STEPS.md` for the per-chapter pipeline, per-story status, and all learned failure modes.
+The upstream project translates the game **zh-CN → English**. This repo is being extended to add **Thai**. **Locked strategy (supersedes the earlier "English-primary + Thai-accent" idea): translate Chinese-primary** — the CN key is the source of truth, the English value is reference-only. Everything becomes Thai (menus, dialogue, names): wuxia register (ข้า/เจ้า/ท่าน — never ฉัน/เธอ/คุณ/ผม/ดิฉัน), proper names transliterated to Thai script per `tools/glossary.tsv`. See `NEXT_STEPS.md` for the per-chapter pipeline, per-story status, and all learned failure modes.
+
+**⚠️ Register is GENDERED (v1.3 fix — do not flatten):** acknowledgment particle = MALE `ขอรับ` / FEMALE `เจ้าค่ะ` (the period-correct female form — NOT the banned modern bare `ค่ะ`). Humble self-reference = MALE `ข้าน้อย` / FEMALE plain `ข้า` (**women never say `ข้าน้อย`**). `เจ้า`/`ท่าน`/`ข้า` are gender-neutral. Identify female speakers by: CN source pronoun in the key (`妾身`/`奴家`/`小女子`/`本宫` = female; `在下`/`小人`/`小的` = male), and the female cast in `tools/glossary.tsv`. So game-wide `ครับ`=0 and bare-`ค่ะ`=0, but `เจ้าค่ะ`>0 is CORRECT.
 
 There is **no build / lint / test step** — the deliverable is data files copied into the game folder.
 
@@ -19,10 +21,10 @@ There is **no build / lint / test step** — the deliverable is data files copie
 Everything lives under `Mod/`, which is what a player copies into their Steam game directory:
 
 - `BepInEx/config/AutoTranslatorConfig.ini` — the control panel. Key settings: `FromLanguage=zh-CN`, `Language=en`, font overrides, `EnableFairyGUI/UGUI/TextMeshPro`.
-- `BepInEx/Translation/en/Text/Translation zh-CN to en.txt` — **the main dictionary, ~85k lines / 15 MB.** This is where 99% of translation work happens.
-- `BepInEx/Translation/en/Text/UI.resizer.txt` — per-UI-path font-size / resize commands (`ChangeFontSizeByPercentage(...)`), used when translated text overflows its box.
-- `BepInEx/Translation/en/Text/regex.txt`, `_Substitutions.txt`, `_Pre/_Postprocessors.txt` — regex + substitution passes.
-- `BepInEx/Translation/en/Texture/*.png` — translated image assets, filenames encode the original texture hash.
+- `BepInEx/Translation/th/Text/Translation zh-CN to en.txt` — **the main dictionary, ~85k lines / 15 MB.** This is where 99% of translation work happens.
+- `BepInEx/Translation/th/Text/UI.resizer.txt` — per-UI-path font-size / resize commands (`ChangeFontSizeByPercentage(...)`), used when translated text overflows its box.
+- `BepInEx/Translation/th/Text/regex.txt`, `_Substitutions.txt`, `_Pre/_Postprocessors.txt` — regex + substitution passes.
+- `BepInEx/Translation/th/Texture/*.png` — translated image assets, filenames encode the original texture hash.
 - `tools/apply_thai.pl` — reusable batch translator (see below).
 
 ## Dictionary file format — critical rules

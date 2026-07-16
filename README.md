@@ -1,8 +1,10 @@
 # Legend of Mortal — ภาษาไทย 🇹🇭 (活侠传 / 活俠傳)
-mod version 1.2
+mod version 1.3
 game version 2025-10-10
 **ม็อดแปลภาษาไทย (ไม่เป็นทางการ) สำหรับเกม Legend of Mortal (活侠传)**
 Unofficial **Thai** translation mod for the game *Legend of Mortal*.
+
+🆕 **v1.3** (2026-07-16) — แก้ **สำนวนแยกเพศ**: ตัวละคร**หญิง**ที่เคยพูดแบบผู้ชาย (ขอรับ / ข้าน้อย) แก้เป็น **เจ้าค่ะ / ข้า** (185 บรรทัด — คำรับ 72 + แทนตัว 113) + เปลี่ยน **fallback เป็นไทย** (`Language=th` — คำที่ยังไม่ได้แปล Google จะเติมเป็น**ไทย**แทนอังกฤษ)
 
 🆕 **v1.2** (2026-07-14) — แก้อาการ **คำปนอังกฤษ** (ปิด entry อักษรจีนตัวเดียวที่ทำให้แปลปนกัน) + เพิ่ม **ฟอนต์ไทย TextMeshPro (Kanit)** แก้ตัวหนังสือเป็น □ ที่ชื่อตัวละคร/ตัวเลือก/UI สถานะ (ตั้ง `FallbackFontTextMeshPro=Kanit_sdf` ให้แล้ว) + แก้ error `UI.resizer`
 
@@ -80,7 +82,7 @@ https://www.facebook.com/groups/1397983044265668/?multi_permalinks=1969429063787
 
 ## 🐞 พบข้อผิดพลาด?
 
-- **ตัวหนังสือล้นกล่อง** → แก้ได้ที่ `BepInEx/Translation/en/Text/UI.resizer.txt`
+- **ตัวหนังสือล้นกล่อง** → แก้ได้ที่ `BepInEx/Translation/th/Text/UI.resizer.txt`
 - **ตัวอักษรเป็น □ (tofu)** → ตรวจว่า `OverrideFont` ตั้งเป็นฟอนต์ที่มีสระ/วรรณยุกต์ไทย
 - ปิดตัวเลือก *"Enable color change of read text"* ในเกม ไม่งั้นบางข้อความอาจไม่ถูกแทนที่
 
