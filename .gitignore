@@ -7,6 +7,7 @@
 # --- Translation-project working files ---
 _progress/
 qwen_test/
+_poc/          # josh StringTable-mod spike (kept locally to retry later; see memory)
 
 # --- Claude / local session files ---
 .claude/
