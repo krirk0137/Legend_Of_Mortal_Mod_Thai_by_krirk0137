@@ -77,6 +77,20 @@ but **`เจ้าค่ะ` > 0 is now CORRECT and expected**. Also update the
 >   inside story prose). If it works it replaces much of the regex.txt work below. One-line, reversible.
 > * 🟠 **23 number/stat templates → `regex.txt` only** (`命中\r\nNN %`, `银两 -NNNN`, `近战伤害NN 爆击率N %`,
 >   `骰子總數: …`, `解锁条件：银两>\=100`, `1.性情>\=60(目前62)`). Infinite variants; static keys can never match.
+> * ✅ **DONE in v1.4:** the 25 translatable ones were applied (`tools/v14_gapfill.py`), and `regex.txt`
+>   got 5 new number rules + a fix for 3 rules that were still emitting ENGLISH. **`命中` rule VERIFIED
+>   working in-game** (`แม่นยำ` appeared in LogOutput), which also proves the `\r\n` escaping in regex.txt
+>   is correct — reuse that form. The 银两 / 伤害 rules did not fire yet (those strings never showed);
+>   still unverified, not necessarily broken.
+> * 🟡 **JOB 2-A (battle-log mixed language) — ROOT CAUSE FOUND, fix still pending.** It is **NOT** our dict
+>   partial-substituting (verified: no dict entry produces `เส้นทาง`/`จำนวนรอบ`/`เอฟเฟกต์สถานะผู้เล่น`).
+>   The battle log is an **appending component**: AutoTranslator matches a cached Thai prefix, sends only the
+>   new Chinese tail to Google, and compounds the mix each round. Proper fix = `[Behaviour] GameLogTextPaths`
+>   with that component's UI path. **Capture attempt 2026-07-20 FAILED** — played a battle with
+>   `EnableTextPathLogging=True` but `骰子總數`/`回合數` never appeared in the log (0 hits), i.e. the battle
+>   DETAIL/LOG panel was never opened. **Next time: turn `EnableTextPathLogging=True`, fight, and explicitly
+>   OPEN the combat detail panel, then grab the `Path :` line next to that text.** 22 poisoned cache entries
+>   were purged from `_auto` meanwhile.
 > * 🟡 **11 MIXED-LANG keys = a REAL BUG to fix at source** — our own Thai leaked INTO a Chinese key, then
 >   Google filled the rest: `[เส้นทาง]回合數: 1…` and `ชิงเฉิง「逸尘道子」申屠龙…`. Proves the dict still has
 >   standalone entries (`路径→เส้นทาง`, `青城→ชิงเฉิง`) that **partial-substitute inside longer strings** —
