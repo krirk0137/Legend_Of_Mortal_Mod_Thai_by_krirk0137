@@ -1,3 +1,19 @@
-r:"^1 次$"=1 time
-r:"^([0-9]{1,9}) 次$"=$1 times
-r:"^归还([0-9]{1,5})银两$"=Return $1 silver
+// ===== Thai regex rules =====
+// Format: r:"<.NET regex>"=<replacement, $1/$2 = capture groups>
+// For strings whose NUMBERS change every time, so a static dictionary key can never match them.
+
+// --- FIXED: these were still English, left over from the upstream EN mod ---
+r:"^1 次$"=1 ครั้ง
+r:"^([0-9]{1,9}) 次$"=$1 ครั้ง
+r:"^归还([0-9]{1,5})银两$"=คืนเงิน $1 ตำลึง
+
+// --- money ---
+r:"^银两 (-?[0-9]{1,9})$"=เงินตำลึง $1
+
+// --- hit rate (very frequent during combat) ---
+r:"^命中\r\n([0-9]{1,3}) %$"=แม่นยำ\r\n$1 %
+
+// --- weapon stat lines ---
+r:"^近战伤害([0-9]{1,4})  爆击率([0-9]{1,3}) %\r\n$"=เสียหายประชิด $1  อัตราคริติคอล $2 %\r\n
+r:"^抛射伤害([0-9]{1,4})  爆击率([0-9]{1,3}) %\r\n范围([0-9]{1,2})\r\n$"=เสียหายวิถีโค้ง $1  อัตราคริติคอล $2 %\r\nระยะ $3\r\n
+r:"^平射伤害([0-9]{1,4})  爆击率([0-9]{1,3}) %\r\n触发([0-9]{1,2})种异常状态\r\n$"=เสียหายวิถีตรง $1  อัตราคริติคอล $2 %\r\nกระตุ้นสถานะผิดปกติ $3 แบบ\r\n
