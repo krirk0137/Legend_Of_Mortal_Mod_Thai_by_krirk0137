@@ -117,28 +117,36 @@ the whole accumulated `_auto` file. Then:
    emits `\r\n`, so only the NAME token substitutes → `เตี่ยนชาง明珠` → Google → `เตี่ยนชางPearl`).
 3. Apply → `keydiff.pl` vs `.EN-BACKUP` = 0 → in-game test → v1.3.
 
-### 🎯 JOB 3 (NEXT SESSION — user chose this 2026-07-16) — SPEAKER-ATTRIBUTED register fix
-**Problem the user hit:** female characters (e.g. 上官萤/ซ่างกวนอิง) still say the MALE `ขอรับ` / `ข้าน้อย`
-in-game. JOB 1 only caught deterministic signals (snapshot-`ค่ะ` + female pronouns in the key = 186 lines);
-most female dialogue was translated with `ขอรับ`/neutral from the start and has **no signal in the dict**.
+### ✅✅ JOB 3 DONE (2026-07-20) — SPEAKER-ATTRIBUTED register fix → v1.5 ✅✅
+**The "no speaker attribution" blocker is SOLVED.** The game ships its story as **Lua scripts**
+(1,631 of them, TextAssets in `Mortal_Data/resources.assets`) and its text as a **LeanLocalization
+key/value table** (`Mortal_Data/level0`, 130 `LeanLanguageCSV`, 72,539 keys). The Lua binds them:
+`setcharacter(characters.Get("girl9"), …)` → `say(luamanager.GetStoryText("D_1_1_011"))`.
+Full pipeline + how-to-rerun: **`tools/job3/README.md`**. Needs `pip install UnityPy`.
 
-**Why it can't be scripted from the dict alone (two hard blocks):**
-1. The dict is a flat `key=value` store with **NO per-line speaker attribution** — the speaker name is a
-   SEPARATE key (`上官萤=ซ่างกวนอิง`), never attached to the dialogue line. So "รู้จักขอรับ" carries no
-   "who said it".
-2. **`ขอรับ` is polysemous** — MALE sentence particle *vs* the verb "รับ" (`ขอรับคำสั่ง` = accept orders,
-   `ขอรับใช้`). Blanket `ขอรับ→เจ้าค่ะ` breaks the verb sense. Must be context-aware per line.
+**Reusable artifacts now in the repo (the real prize — use these for ALL future register/QA work):**
+- `tools/speaker_map.tsv` — **55,192 dict lines → speaker tag(s) + name + F/M?/MIX**.
+- `tools/speaker_gender.tsv` — 343 speakers with portrait folder + every gender signal.
 
-**The fix (B — systematic):** extract the game's **Fungus flowchart / dialogue-with-speaker data** from the
-asset bundles (AssetStudio / AssetRipper; or via the [[josh-stringtable-spike]] StringTable whose keys are
-Fungus block IDs). Build a `speaker → gender` map (female cast in `tools/glossary.tsv`: 上官萤/ซ่างกวนอิง,
-唐默铃/โม่หลิง, 云裳/หวินฉาง, 龙湘/หลงเซียง, 小梅/เสี่ยวเหมย, 温夫人, 乐娘子, 郁竹, 萤儿/อิงเอ๋อร์…). Then for each
-female speaker's lines convert male→female register **context-aware** (particle `ขอรับ→เจ้าค่ะ`, `ข้าน้อย→ข้า`;
-SKIP `ขอรับ`-as-verb). Interim stopgap = reactive per-line fixes (user screenshots/quotes the wrong lines).
+**What was applied (snapshot `.PRE-V15-JOB3`, synced to live):**
+- **111 lines** female-register fixed: `ขอรับ`→`เจ้าค่ะ` ×33 and `ข้าน้อย`→`ข้า` ×105, across 20 female
+  speakers (girl8 魏菊 19, girl4 龙湘 17, girl7 郁竹 16, girl9 上官萤 10, sister1 唐默铃 10, girl5 虞小梅 8,
+  special832 唐芳 7, girl2 叶云裳 7, girl6 夏侯兰 5, special813 画中仙 5, …).
+- **12 lines REVERTED to male** — a real JOB-1 bug the speaker data caught: v1.3 Stage A had put the
+  FEMALE `เจ้าค่ะ` on **赵活 the male protagonist** (8 lines), `waiter3 店小二` (2) and `special103 南宫浅` (1).
+- Verified: key-drift vs `.PRE-V15-JOB3` = **0**, line count 85,841 unchanged, UTF-8 no BOM, no CRLF,
+  `ครับ`=0, bare-`ค่ะ`=0, `เธอ`=0, `หม่อมฉัน`=0. `เจ้าค่ะ` 73→92, `ข้าน้อย` 774→691, `ขอรับ` 715→696.
 
-**Already done 2026-07-16 (don't redo):** analyzed all `ขอรับ` lines with a female pronoun in the key = only 2
-(`奴家遵命…` L49277 — that `ขอรับ` is the VERB, correctly left; `妾欲亲往…` L59301 — genuine particle, FIXED
-→ `เจ้าค่ะ`, snapshot `.PRE-V13-1C`, synced). Confirmed no `上官萤` self-naming line still on `ขอรับ`.
+**Why only 111 lines and not thousands:** of the 1,405 male-register dict lines that have speaker
+data, **1,112 have exactly ONE speaker** and only those can be safely gendered; the rest are generic
+lines (`是。`, `好。`) shared by up to 48 different characters and are inherently un-genderable.
+Of the 1,112, most belong to male speakers (418 are the protagonist alone) — 111 were female. The
+fix is small because the problem was small; it is now **exhaustively enumerated**, not sampled.
+
+**Key correction to the JOB 1 rules:** `在下` in the Chinese key is **NOT** a male-only marker —
+龙湘 (female) says `在下锦香宫龙湘，请陈公子赐教吧。`. Speaker attribution beats key-pronoun heuristics.
+
+**⬜ REMAINING for v1.5:** in-game test (user), rebuild zip, git tag `v1.5`.
 
 ### ❌ NOT translatable (don't chase it)
 The **"ตำนาน" (Legend/codex) menu** — even the English base doesn't translate it, i.e. XUnity cannot SEE the
