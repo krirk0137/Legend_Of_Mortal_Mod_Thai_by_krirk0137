@@ -34,7 +34,7 @@ Lines are `SOURCE=VALUE`. Lines starting with `//` are comments; `////----------
 - The **key (left of `=`) is the original Chinese and must never be altered** — XUnity matches it exactly against in-game text. Only edit the **value**.
 - Both **Simplified and Traditional** variants of a string often appear as separate keys (e.g. `小师妹=` and `小師妹=`). The game is launched in **Simplified Chinese**, so only **simplified keys are actually triggered** — prioritize those.
 - File encoding is **UTF-8, no BOM, LF line endings**. Preserve it. **Do NOT edit with tools that inject a BOM or CRLF** (e.g. PowerShell `Set-Content -Encoding utf8` adds a BOM and can break parsing). Use the perl tooling or byte-safe edits.
-- Changes only take effect on **game restart** (`ReloadTranslationsOnFileChange=False`).
+- **Hot-reload is ON** (`ReloadTranslationsOnFileChange=True`, set 2026-07-20): edits to the dictionary are picked up **without restarting the game**. (If it ever misbehaves, set it back to `False` — then changes need a restart.)
 
 ## Batch-translating values
 

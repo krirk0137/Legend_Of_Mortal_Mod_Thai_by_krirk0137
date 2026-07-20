@@ -71,6 +71,10 @@ but **`เจ้าค่ะ` > 0 is now CORRECT and expected**. Also update the
 >   weapon-stat blocks. Also fix pinyin leaks in them (Yu Xiaomei/Tang Shan/Zhao Huo/Shentu Long → glossary Thai).
 > * 🔴 **27 single-CJK-char keys — NEVER add** (`買 卖 一 二 三 四 上 下 左 右 我 你 门 唐 器 暗 …`). Same class
 >   v1.2 commented out (97 entries). `你=คุณ` / `我=ฉัน` would be catastrophic (substring-match everywhere).
+> * 💡 **Candidate shortcut for the number bucket:** `[Behaviour] TemplateAllNumberAway` (currently `False`).
+>   It templates numbers away so `命中 91 %` / `命中 50 %` share ONE cached translation. NOT documented in the
+>   bundled `README (AutoTranslator).md`, so **test it before trusting it** (watch for numbers being templated
+>   inside story prose). If it works it replaces much of the regex.txt work below. One-line, reversible.
 > * 🟠 **23 number/stat templates → `regex.txt` only** (`命中\r\nNN %`, `银两 -NNNN`, `近战伤害NN 爆击率N %`,
 >   `骰子總數: …`, `解锁条件：银两>\=100`, `1.性情>\=60(目前62)`). Infinite variants; static keys can never match.
 > * 🟡 **11 MIXED-LANG keys = a REAL BUG to fix at source** — our own Thai leaked INTO a Chinese key, then
