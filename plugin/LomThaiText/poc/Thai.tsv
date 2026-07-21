@@ -1,0 +1,37 @@
+# LoM Thai Text — PoC probe set (Solution 2)
+# format: key<TAB>value   ·   UTF-8, no BOM, LF   ·   '#' = comment
+# escapes in the value: \n \t \\
+#
+# Every line here is a *key*, not a Chinese string. Nothing in this file can be
+# expressed by the XUnity text-keyed dictionary.
+#
+# v2 — the "[S2]" markers are GONE. They were the bug: a title button is sized for
+# two Chinese glyphs, so "[S2] " filled line 1 and the Thai wrapped to line 2 and got
+# clipped. Values here are deliberately short.
+
+# --- A. title screen. Three short labels + ONE deliberately long one as a control.
+#     If the three short ones read Thai and 'Setting' shows a clipped/shrunken mess,
+#     the box-size diagnosis is confirmed and the fix is UI sizing, not fonts.
+System/Start/StartGame	เริ่ม
+System/Start/Library	หอธรรม
+System/Start/Exit	ลาจาก
+System/Start/Setting	ตั้งค่าระบบทั้งหมดของเกม
+
+# --- B. .NET format template. Game does string.Format(this, year, month, stage).
+#     "第{0}年{1}{2}" — infinite variants, so the dictionary could never match it.
+#     Already confirmed working on the Load Game panel.
+System/GameTimeText	ปีที่ {0} {1}{2}
+
+# --- C. single-character values — the class we had to COMMENT OUT in v1.2 because
+#     唐=ถัง partial-substituted into 三师兄. Here there is no text matching at all.
+#     Vertical two-character buttons on the 养成 screen.
+System/Title/Training_01	ฝึก
+System/Title/Training_02	ฝน
+System/Title/Forge_01	ตี
+System/Title/Forge_02	หล่อ
+
+# --- D. collision divergence. Both keys hold the SAME Chinese text 事件, so the
+#     dictionary is forced to give them one identical Thai rendering forever.
+#     Here they diverge. Kept short so the box cannot clip them.
+Middle/Title/Event	เหตุ
+System/StoryEvent	เรื่อง

@@ -28,3 +28,6 @@ desktop.ini
 
 # --- AssetRipper dump (2.5 GB, regenerate with AssetRipper; see tools/solution2/README.md) ---
 AssetRipper_Solution2/
+
+# --- Solution 2 runtime dump (regenerate by launching the game; see plugin/README.md) ---
+tools/solution2/LomThaiText_dump.tsv
