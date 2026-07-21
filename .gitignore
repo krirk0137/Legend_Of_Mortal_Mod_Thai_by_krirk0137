@@ -37,3 +37,4 @@ plugin/LomThaiText/full/
 tools/solution2/s2_kv.json
 tools/solution2/s2_keysrc.json
 __pycache__/
+tools/solution2/update_worklist.tsv
