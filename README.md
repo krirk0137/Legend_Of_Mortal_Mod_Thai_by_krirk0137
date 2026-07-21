@@ -1,6 +1,7 @@
 # Legend of Mortal Thai Translation Mod — ม็อดแปลไทย 🇹🇭 (活侠传 / 活俠傳)
 
-**Legend of Mortal mod ภาษาไทย · Legend of Mortal translate ภาษาไทย — แปลไทยครบทั้งเกม โหลดฟรี**
+**Legend of Mortal แปลไทย — ม็อดภาษาไทย แปลครบทั้งเกม 98% โหลดฟรี**
+<sub>Legend of Mortal mod ภาษาไทย · Legend of Mortal translate ภาษาไทย · Thai translation mod</sub>
 
 📥 **[ดาวน์โหลดที่ Nexus Mods](https://www.nexusmods.com/legendofmortal/mods/4)** ·
 🎬 **[คลิปแนะนำ / วิธีติดตั้ง](https://youtu.be/E5H7lf9kGrU)** ·
