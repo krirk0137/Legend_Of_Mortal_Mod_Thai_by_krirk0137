@@ -1,11 +1,17 @@
-https://youtu.be/E5H7lf9kGrU
-https://www.nexusmods.com/legendofmortal/mods/4
+# Legend of Mortal Thai Translation Mod — ม็อดแปลไทย 🇹🇭 (活侠传 / 活俠傳)
 
-# Legend of Mortal — ภาษาไทย 🇹🇭 (活侠传 / 活俠傳)
-mod version 2.0
-game version 2025-10-10
+**Legend of Mortal mod ภาษาไทย · Legend of Mortal translate ภาษาไทย — แปลไทยครบทั้งเกม โหลดฟรี**
+
+📥 **[ดาวน์โหลดที่ Nexus Mods](https://www.nexusmods.com/legendofmortal/mods/4)** ·
+🎬 **[คลิปแนะนำ / วิธีติดตั้ง](https://youtu.be/E5H7lf9kGrU)** ·
+💾 **[ดาวน์โหลดที่ GitHub Releases](../../releases/latest)**
+
+mod version 2.0 · game version 2025-10-10
+
 **ม็อดแปลภาษาไทย (ไม่เป็นทางการ) สำหรับเกม Legend of Mortal (活侠传)**
-Unofficial **Thai** translation mod for the game *Legend of Mortal*.
+Unofficial **Thai translation mod** for **Legend of Mortal** — a complete Thai
+localization of the game (all 17 story chapters, menus, items, skills and UI),
+translated directly from Simplified Chinese. Free, non-commercial.
 
 🆕 **v2.0** (2026-07-22) — **เปลี่ยนวิธีแปลทั้งระบบ** จาก "จับคู่ข้อความจีน" เป็น **"ใส่ตรงตามรหัสประจำบรรทัดของเกม"** → ครอบคลุม **98.13%** ของทั้งเกม, ปลดล็อกสิ่งที่วิธีเดิมทำไม่ได้เลย (`ปี 三` → **ปีที่ 3**, ปุ่ม 修/练 → **ฝึก/ฝน**, `近战伤害{0}` → **ความเสียหายประชิด 10**), แก้สำนวนชาย/หญิงเพิ่ม 66 จุด และ**รอดจากการอัปเดตเกมในอนาคต** — [รายละเอียดด้านล่าง](#-v20--เปลี่ยนวิธีแปลทั้งระบบ)
 
