@@ -267,8 +267,9 @@
 /[UI]/TopPanel/CharacterIntroPanel/Frame/Name=UGUI_HorizontalOverflow(overflow)
 /[UI]/TopPanel/CharacterIntroPanel/Frame/Title=AutoResize(true,10,30)
 /[UI]/TopPanel/CharacterIntroPanel/Frame/Title=UGUI_HorizontalOverflow(overflow)
-/[UI]/TopPanel/CharacterIntroPanel/Frame/Intro=AutoResize(true,14,18)
-/[UI]/TopPanel/CharacterIntroPanel/Frame/Intro=UGUI_VerticalOverflow(overflow)
+# NOTE: this panel is TextMeshPro, not legacy UGUI Text, so no UGUI_/AutoResize value
+# here can move it — kept at the original v1.6 value. Needs TMP auto-sizing support.
+/[UI]/TopPanel/CharacterIntroPanel/Frame/Intro=AutoResize(true,8,18)
 
 
 ##############################################
