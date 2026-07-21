@@ -11,6 +11,7 @@ ROOT = os.path.dirname(os.path.dirname(HERE))
 
 JOINED = os.path.join(ROOT, "plugin", "LomThaiText", "full", "Thai.tsv")
 GAPS = os.path.join(HERE, "gaps_thai.tsv")
+GENDER_FIX = os.path.join(HERE, "gender_fix.tsv")
 GAME = r"C:\Program Files (x86)\Steam\steamapps\common\LegendOfMortal\BepInEx\plugins\LomThaiText\Thai.tsv"
 
 THAI = re.compile(r"[฀-๿]")
@@ -48,6 +49,22 @@ def main():
 
     merged = dict(joined)
     merged.update(gaps)
+
+    # JOB 4 last: per-key gendered register (s2_gender.py), which only key-based
+    # injection makes possible — the dictionary had to give every key sharing a text
+    # the same rendering.
+    gfix = {}
+    if os.path.exists(GENDER_FIX):
+        gfix, badg = read(GENDER_FIX)
+        if badg:
+            print("!! malformed gender_fix rows:", badg[:3])
+            return 1
+        unknown_g = [k for k in gfix if k not in merged]
+        if unknown_g:
+            print(f"!! {len(unknown_g)} gender-fix keys are not in the table: {unknown_g[:5]}")
+            return 1
+        merged.update(gfix)
+        print(f"   gender-register rewrites applied: {len(gfix)}")
 
     # --- verification -----------------------------------------------------
     err = collections.Counter()

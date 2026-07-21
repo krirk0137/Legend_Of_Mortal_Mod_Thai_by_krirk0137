@@ -172,6 +172,8 @@ namespace LomThaiText
                             }
                             catch (Exception e) { Plugin.Log.LogWarning("[font] TMP fallback attach failed: " + e.Message); }
                         }
+                        var tp2 = Resizer.PathOf(tmp.transform);
+                        if (!Resizer.Apply(tmp, tp2)) Unruled.Note(tmp, tp2);
                         continue;
                     }
 

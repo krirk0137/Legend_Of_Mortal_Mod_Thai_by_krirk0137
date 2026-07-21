@@ -1,0 +1,38 @@
+# Speakers the v1.5 curated FEMALE set missed, with the evidence for each.
+# gender.py already computed these signals; v1.5 simply hand-listed 38 tags and stopped there.
+#   F:folder  = the portrait art lives in a female character's folder (Girl*/Female/Women/…)
+#   F:word    = the display name contains a female morpheme (女弟子 / 夫人 / 妇人 / 娘 …)
+#   F:pron    = narration around the name uses 她 rather than 他, ≥80% of ≥5 samples
+# confidence: strong = two independent signals or an explicit 女/夫人/娘 in the name
+#             folder = portrait folder only, but it is a NAMED female character's folder,
+#                      which means the art is literally that character's (aliases/disguises)
+# tag	name	evidence	confidence
+chao1	何大妈	F:folder + 大妈 (auntie)	strong
+female2	女子	F:folder F:word	strong
+female3	女子	F:folder F:word	strong
+girl2_1	少女	F:folder Girl2_葉雲裳	folder
+girl2_2	叶云裳	F:folder F:pron(145/170)	strong
+girl2_3	？？？	F:folder Girl2_葉雲裳	folder
+girl2_4	叶云啾	F:folder Girl2_葉雲裳	folder
+girl4_1	少女	F:folder Girl4_龍湘	folder
+girl5_2	虞小梅	F:folder Girl5_小梅	folder
+girl5_4	虞小梅	F:folder Girl5_小梅	folder
+girl6_2	夏侯兰	F:folder F:pron(129/150)	strong
+girl7_1	郁竹	F:folder F:pron(5/5)	strong
+girl8_0	少女	F:folder Girl8_小菊	folder
+girl_group1	崆峒四姝	F:folder F:pron(4/5)	strong
+mom1	赵活的娘	F:folder + 娘 (mother)	strong
+special402	温夫人	F:word F:pron(88/107)	strong
+special402_1	温夫人	F:word F:pron(88/107)	strong
+special402_2	温夫人	F:word F:pron(88/107)	strong
+special805	鹤手	F:folder Girl5_小梅	folder
+special805_0	？？？	F:folder Girl5_小梅	folder
+special821	夏侯梅	F:folder Girl6_小蘭	folder
+special822	呼延菊	F:folder F:pron(12/13)	strong
+special830	梁有诗	F:pron(4/5)	folder
+trainee371	岭南女弟子	F:word 女弟子	strong
+trainee421	峨嵋女弟子	F:word 女弟子	strong
+trainee_girl10	唐门女弟子	F:folder F:word	strong
+trainee_girl5	唐门女弟子	F:folder F:word	strong
+trainee_girl9	唐门女弟子	F:folder F:word	strong
+women2	妇人	F:folder F:word	strong

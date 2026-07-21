@@ -42,6 +42,26 @@ namespace LomThaiText
             catch { }
         }
 
+        /// <summary>TMP labels are marked so a rule author knows to reach for TMP_Overflow /
+        /// TMP_Alignment rather than the UGUI_ directives, which do nothing here.</summary>
+        internal static void Note(TMPro.TMP_Text t, string path)
+        {
+            if (t == null || _rows.ContainsKey(path)) return;
+            try
+            {
+                var box = t.rectTransform.rect;
+                var s = t.text ?? "";
+                if (s.Length > 40) s = s.Substring(0, 40);
+                _rows[path] = string.Format("{0}x{1}\t{2}\tTMP {3}\t{4}..{5}\t{6}",
+                    (int)box.width, (int)box.height, t.fontSize,
+                    t.enableAutoSizing ? "autoSize" : "fixed",
+                    t.fontSizeMin, t.fontSizeMax,
+                    s.Replace("\t", " ").Replace("\n", "\\n"));
+                _dirty = true;
+            }
+            catch { }
+        }
+
         internal static void FlushIfDue()
         {
             if (!_dirty || Time.unscaledTime < _nextWrite) return;
