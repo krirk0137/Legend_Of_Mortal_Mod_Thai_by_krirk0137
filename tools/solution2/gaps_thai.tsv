@@ -1,0 +1,147 @@
+# Keys the XUnity dictionary could never hold — translated by hand for the Solution 2 plugin.
+# Merged over the joined table by s2_merge.py (these win).
+# Terms pinned to the existing dictionary: 决斗=ประลองยุทธ์ 绝招=ท่าไม้ตาย 连击=โจมตีต่อเนื่อง
+# 贡献=ค่าอุทิศ 银两/两=ตำลึงเงิน 近战=ประชิด 平射=ยิงตรง 抛射=ยิงโค้ง 捅人=จ้วงแทง
+# 揍狗拳=หมัดตีสุนัข 唐门暗器=อาวุธลับสำนักถัง 三师兄=พี่สาม 师弟=ศิษย์น้อง 代掌门=รักษาการเจ้าสำนัก
+
+# ---- single-character values. 97 of these had to be COMMENTED OUT in v1.2 because
+#      唐=ถัง partial-substituted into 三师兄. Under key injection there is no text
+#      matching at all, so they are trivially safe. Kept short: these are narrow boxes.
+
+# Chinese numerals used for the in-game date (第{0}年 -> "ปีที่ 3")
+System/Number_0	0
+System/Number_1	1
+System/Number_2	2
+System/Number_3	3
+System/Number_4	4
+System/Number_5	5
+System/Number_6	6
+System/Number_7	7
+System/Number_8	8
+System/Number_9	9
+System/Number_10	10
+
+# battle HUD
+System/BattleEnemy	ศัตรู
+System/BattleFriend	เรา
+System/BattleLose	แพ้
+System/BattleVictory	ชนะ
+System/Money	เงิน
+System/Money2	ตำลึง
+System/NA	ไม่มี
+
+# vertically stacked two-character buttons — each half is one box
+System/BattleStartText_01	ออก
+System/BattleStartText_02	ศึก
+System/DeleteText_01	ลบ
+System/DeleteText_02	ทิ้ง
+System/SaveText_01	บัน
+System/SaveText_02	ทึก
+System/Title/Alchemy_01	ปรุง
+System/Title/Alchemy_02	ยา
+System/Title/Develop_01	พัฒ
+System/Title/Develop_02	นา
+System/Title/Forge_01	ตี
+System/Title/Forge_02	เหล็ก
+System/Title/Training_01	ฝึก
+System/Title/Training_02	ฝน
+System/Title/Buy_01	ซื้อ
+System/Title/Sell_01	ขาย
+
+# movement keys
+BattleKey/Name/Up	บน
+BattleKey/Name/Down	ล่าง
+BattleKey/Name/Left	ซ้าย
+BattleKey/Name/Right	ขวา
+
+# 唐门暗器总纲 — one skill name spread over six stacked boxes
+BattleSkill/Brother1/Skill_1_1	สำนัก
+BattleSkill/Brother1/Skill_1_2	ถัง
+BattleSkill/Brother1/Skill_1_3	อาวุธ
+BattleSkill/Brother1/Skill_1_4	ลับ
+BattleSkill/Brother1/Skill_1_5	ตำรา
+BattleSkill/Brother1/Skill_1_6	ใหญ่
+
+# animals — single characters, same hazard class
+Character/chicken1	ไก่
+Character/chicken2	ไก่
+Character/chicken3	ไก่
+Character/dog1	สุนัข
+Character/horse1	ม้า
+Character/snake1	งู
+Character/wolf1	หมาป่า
+CombatCharacter/Name/dog1	สุนัข
+CombatCharacter/Name/snake1	งู
+CombatCharacter/Name/wolf1	หมาป่า
+CombatSkill/Name/C916	สุนัข
+CombatSkill/Name/C918	งู
+CombatSkill/Name/C927	หมาป่า
+
+# ---- single-character CHOICE options. NEXT_STEPS filed these as unreachable.
+Story/O_0_Meet_Option_04_01_003	เจ้า
+Story/O_1_2_2_001	เอา
+Story/O_2_5_3_2_001	มี
+Story/O_3_11_3_001	ดี
+Story/O_3_1_6_4_001	ลงมือ
+Story/O_3_1_6_4_3_003	ใช่
+Story/O_3_1_7_1_002	มี
+Story/O_3_3_1_2_004	เงิน
+Story/O_3_8_4_1_003	ดี
+Story/O_4_6_13_2_002	กล้า
+Story/O_4_9_3_3_Break_002	ข้าวต้ม
+Story/O_5_2_5_002	มาก
+Story/O_5_4_2_003	พนัน
+Story/O_5_4_7_3_7_005	รอ
+Story/O_5_5_2_Break_01_004	เจ้า
+Story/O_6_10_1_004	มี
+Story/O_Meet_Option_704_01_003	เจ้า
+Story/O_S0003_01_001	ช่างมัน
+Story/O_S0017_04_Break_009	ไก่
+Story/O_S0020_02_03_004	พูด
+Story/O_S0020_02_03_007	พูด
+Story/O_S0023_01_02_001	ไล่ตาม
+Story/O_S0023_01_02_01_001	ช่วย
+Story/O_S0024_01_01_001	โกรธ
+Story/O_S0027_01_001	เชื่อ
+Story/O_S0206_01_001	ไป
+Story/O_S0208_02_03_001	ตาย
+Story/O_S0208_04_03_004	อาหาร
+Story/O_S0208_04_03_005	เสื้อผ้า
+Story/O_S0208_04_03_006	ที่อยู่
+Story/O_S0208_04_03_007	เดินทาง
+Story/O_S0604_01_001	ใช่
+Story/O_S0702_01_002	ดี
+Story/O_S2100_02_02_005	ดี
+Story/O_S2504_01_001	ดี
+Story/O_S2504_02_003	ไสหัว
+Story/O_S3004_01_004	ซื้อ
+Story/O_S3004_01_005	ให้
+Story/O_S8300_01_001	ตกใจ
+Story/O_S8300_01_01_003	โอ้
+Story/O_Talk_Brother4_02_01_03_001	ซื้อ
+
+# ---- .NET format templates. NEXT_STEPS filed these as "infinite variants -> regex only".
+#      With the key, ONE line covers every number.
+UpgradeItemRelationDesc/BattleAttack_001	ความเสียหายประชิด {0:N0}  อัตราคริติคอล {1:P0}
+UpgradeItemRelationDesc/BattleAttack_101	ความเสียหายยิงตรง {0:N0}  อัตราคริติคอล {1:P0}
+UpgradeItemRelationDesc/BattleAttack_201	ความเสียหายยิงโค้ง {0:N0}  อัตราคริติคอล {1:P0}
+UpgradeItemRelationDesc/CombatAttack_001	ความเสียหายจ้วงแทง +{0:N0}  ลูกเต๋า +{1:N0}
+
+# ---- runtime {$var} substitution — a static dictionary key can never match these
+Story/D_S9903_01_005	เกณฑ์ค่าอุทิศขั้นต่ำตอนนี้คือ {$var2}
+Story/D_S9903_01_006	ค่าอุทิศของเจ้าเดือนนี้คือ {$var4}
+
+# ---- talent descriptions (剑圣极招 line)
+PlayerTalent/Desc/8126	[ประลองยุทธ์]\nเมื่อโจมตีต่อเนื่องเกิน 3 ครั้ง ท่าไม้ตายจะเปลี่ยนเป็น [กระบวนท่าสุดยอดที่หนึ่ง]
+PlayerTalent/Desc/8127	[ประลองยุทธ์]\nเมื่อโจมตีต่อเนื่องเกิน 3 ครั้ง ท่าไม้ตายจะเปลี่ยนเป็น [กระบวนท่าสุดยอดที่สอง]
+PlayerTalent/Desc/8128	[ประลองยุทธ์]\nเมื่อโจมตีต่อเนื่องเกิน 3 ครั้ง ท่าไม้ตายจะเปลี่ยนเป็น [กระบวนท่าสุดยอดที่สาม]
+
+# ---- prose the v1.6 pass missed
+Book/Desc/3002	คัมภีร์เต้าเต๋อจิงกล่าวไว้ว่า「ฟ้าดินไร้เมตตา ถือสรรพสิ่งดั่งสุนัขฟาง」\nสุนัขที่หมัดตีสุนัขเอ่ยถึงนั้น หาใช่สุนัขจริงไม่ หากคือศัตรูทั้งปวงในโลกหล้า ไม่ว่าผู้ใดล้วนปฏิบัติเสมอกัน จับมาทุบตีเยี่ยงสุนัข เจ้าลูกหมากระจอก จะน่าครั่นคร้ามอันใด ขอเพียงปักใจว่าตนต้องชนะ ข่มกำลังใจฝ่ายตรงข้ามลงให้ได้ ต่อให้เป็นหมาป่าเป็นเสือ ก็ต้องหนีหางจุกตูดต่อหน้าเจ้า
+Story/T_2_4_2_006	แต่เสบียงติดตัวก็ยังต้องใช้อย่างประหยัด มิฉะนั้นพอถึงคราวต้องออกเดินทางจริง จะจนกรอบจนต้องขึ้นสวรรค์ตะวันตกไปเสียเลย
+
+# the game's own data has a malformed close tag {/30} here — keep it byte-for-byte
+Story/D_Meet_Option_704_03_003	{size=30}ศิษย์น้อง ข้าขอเตือนเจ้าสักคำ{/30}\n{size=30}เจ้าต้องใส่ใจให้ดี อย่าเอาชนะพี่สามต่อหน้าศิษย์น้องชายหญิง{/30}\n{size=30}ตอนนี้เขาเป็นรักษาการเจ้าสำนัก หากเจ้าชนะเขา ความเชื่อมั่นของเหล่าศิษย์น้องย่อมสั่นคลอน{/30}
+
+# ---- the dictionary holds ENGLISH here, so the join skipped it
+Story/D_2_5_3_3_3_029	{size=40}ตายก็ไม่คืน!!{/size}

@@ -43,6 +43,8 @@ namespace LomThaiText
         internal static string OptTmpFonts = "Kanit";
         internal static string OptUguiFont = "Tahoma";
         internal static float OptSweep = 1f;
+        internal static bool OptFit = true;
+        internal static int OptFitMin = 8;
         internal static bool OptAutoDump = true;
         internal static bool OptDiag = true;
         internal static KeyCode KeyReload = KeyCode.F10;
@@ -67,10 +69,19 @@ namespace LomThaiText
                 "Comma-separated name fragments. The first matching TMP_FontAsset in memory is added "
                 + "to TMP's GLOBAL fallback list. (XUnity's Kanit_sdf bundle is really named "
                 + "'Kanit-Regular SDF' inside.)").Value;
-            OptUguiFont = Config.Bind("Font", "UguiOSFont", "Tahoma",
-                "Windows font used for legacy UGUI Text components showing Thai. Empty = off.").Value;
+            OptUguiFont = Config.Bind("Font", "UguiOSFont", "",
+                "Windows font forced onto legacy UGUI Text showing Thai. DEFAULT OFF, and it should "
+                + "stay off: Unity's dynamic fonts already source Thai glyphs from the OS fallback, "
+                + "so the game's own brush fonts render Thai fine and forcing Tahoma only flattens "
+                + "the typography. Set a font name here only if some control really does show tofu.").Value;
+            OptFit = Config.Bind("Font", "AutoShrinkOverflow", true,
+                "Let labels shrink to fit. A label sized for two Chinese glyphs clips long Thai "
+                + "(Wrap + Truncate). XUnity's UI resizer no longer sees these strings — the text is "
+                + "already Thai when it reaches the component — so the plugin handles it.").Value;
+            OptFitMin = Config.Bind("Font", "MinFontSize", 8,
+                "Smallest font size AutoShrinkOverflow may shrink a label to.").Value;
             OptSweep = Config.Bind("Font", "SweepSeconds", 1.0f,
-                "How often to re-scan for components showing Thai in a font that cannot render it.").Value;
+                "How often to re-scan for injected labels that need shrinking.").Value;
             OptAutoDump = Config.Bind("Debug", "AutoDumpOnce", true,
                 "Dump the game's live key->text table to BepInEx/LomThaiText_dump.tsv once it is "
                 + "populated. This is the ground truth for building the full translation file.").Value;
@@ -180,25 +191,31 @@ namespace LomThaiText
         {
             if (!OptEnabled || Map.Count == 0) return;
 
+            // The per-key ContainsKey is only for the one-time report; skip it afterwards,
+            // because with the full ~71k table this runs on every scene change.
+            bool census = _lastReport.Length == 0 || _bigApplies < 2;
+            var t0 = census ? System.Diagnostics.Stopwatch.StartNew() : null;
+
             int replaced = 0, created = 0;
             foreach (var kv in Map)
             {
-                bool existed = LeanLocalization.CurrentTranslations.ContainsKey(kv.Key);
+                if (census && LeanLocalization.CurrentTranslations.ContainsKey(kv.Key)) replaced++;
+                else if (census) created++;
                 var tr = LeanLocalization.RegisterTranslation(kv.Key);
                 if (tr == null) continue;
                 tr.Data = kv.Value;
                 tr.Primary = true;
-                if (existed) replaced++; else created++;
             }
 
             int total = LeanLocalization.CurrentTranslations.Count;
             var report = replaced + "/" + created + "/" + total;
-            if (report != _lastReport)
+            if (census && report != _lastReport)
             {
                 _lastReport = report;
                 Log.LogInfo(string.Format(
-                    "Applied {0} keys — {1} overwrote an existing game string, {2} were new keys. "
-                    + "Game table now holds {3} keys.", replaced + created, replaced, created, total));
+                    "Applied {0} keys in {1} ms — {2} overwrote an existing game string, {3} were "
+                    + "new keys. Game table now holds {4} keys.",
+                    Map.Count, t0.ElapsedMilliseconds, replaced, created, total));
             }
 
             EnsureTicker();

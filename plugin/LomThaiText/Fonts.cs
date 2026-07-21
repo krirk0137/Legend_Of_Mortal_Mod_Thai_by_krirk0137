@@ -175,6 +175,8 @@ namespace LomThaiText
                         continue;
                     }
 
+                    Fit(c as Text);
+
                     if (os == null || fp == null || HasCjk(s)) continue;
                     if (fp.PropertyType != typeof(Font) || !fp.CanWrite) continue;
                     if (ReferenceEquals(cur, os)) continue;
@@ -211,6 +213,40 @@ namespace LomThaiText
                 }
             }
             catch (Exception e) { Plugin.Log.LogError("Sweep failed: " + e); }
+        }
+
+        private static readonly HashSet<int> _fitted = new HashSet<int>();
+        private static int _fitLog = 6;
+
+        /// <summary>Thai is longer than the Chinese a label was laid out for. Let it shrink rather
+        /// than wrap onto a line the box then clips. Only touches labels that actually overflow,
+        /// and only once each.</summary>
+        private static void Fit(Text t)
+        {
+            if (!Plugin.OptFit || t == null) return;
+            int id = t.GetInstanceID();
+            if (_fitted.Contains(id)) return;
+            try
+            {
+                var box = t.rectTransform.rect;
+                bool overflows = t.preferredWidth > box.width + 0.5f || t.preferredHeight > box.height + 0.5f;
+                if (!overflows) return;             // re-checked next sweep if the text changes
+                _fitted.Add(id);
+
+                if (!t.resizeTextForBestFit)
+                {
+                    t.resizeTextForBestFit = true;
+                    t.resizeTextMaxSize = Mathf.Max(t.fontSize, 1);
+                }
+                if (t.resizeTextMinSize > Plugin.OptFitMin) t.resizeTextMinSize = Plugin.OptFitMin;
+                t.SetAllDirty();
+
+                if (_fitLog-- > 0)
+                    Plugin.Log.LogInfo(string.Format("[fit] '{0}' box={1}x{2} needed={3}x{4} -> bestFit {5}..{6}",
+                        SafeName(t), (int)box.width, (int)box.height,
+                        (int)t.preferredWidth, (int)t.preferredHeight, t.resizeTextMinSize, t.resizeTextMaxSize));
+            }
+            catch { }
         }
 
         internal static PropertyInfo TextPropOf(Type t)

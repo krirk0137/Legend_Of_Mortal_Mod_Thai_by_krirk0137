@@ -31,3 +31,9 @@ AssetRipper_Solution2/
 
 # --- Solution 2 runtime dump (regenerate by launching the game; see plugin/README.md) ---
 tools/solution2/LomThaiText_dump.tsv
+
+# --- Solution 2 generated tables (rebuild: python tools/solution2/s2_full.py && s2_merge.py) ---
+plugin/LomThaiText/full/
+tools/solution2/s2_kv.json
+tools/solution2/s2_keysrc.json
+__pycache__/
