@@ -25,7 +25,7 @@ for k, text in kv.items():
     hit = d.get(dk)
     if hit is None:
         missing.append((k, text))
-    elif not THAI.search(to_native(hit[1])):
+    elif not THAI.search(to_native(hit[1], k)):
         notthai.append((k, text, hit[1]))
 
 print(f"no dictionary entry: {len(missing)}     entry not Thai: {len(notthai)}\n")

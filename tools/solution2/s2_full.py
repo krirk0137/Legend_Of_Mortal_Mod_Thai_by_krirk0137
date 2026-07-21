@@ -43,16 +43,26 @@ def to_dict_key(text):
     return re.sub(r"(?<!\\)=", "\\\\=", t)
 
 
-def to_native(v):
+FUNGUS_NS = ("Story/", "CombatTalking/")
+
+
+def to_native(v, key=""):
     """Dictionary value -> the form the game itself uses.
 
-    The dictionary keeps XUnity's escaped rich text (`<size\\=20>ไทย</size>`); Fungus wants
-    `{size=20}ไทย{/size}`. Only Story keys carry these tags (691 of them). A literal `\\n`
-    is left alone — the plugin's loader turns it into a real newline."""
-    v = re.sub(r"<(size|color|link)\\?=([^>]*)>", lambda m: "{" + m.group(1) + "=" + m.group(2) + "}", v)
+    The dictionary keeps XUnity's escaped rich text, `<size\\=20>ไทย</size>`. Where that text
+    goes decides how to write it back:
+      • Story/ and CombatTalking/ run through Fungus, which wants `{size=20}ไทย{/size}`
+      • everything else lands in a UGUI Text, which wants `<size=20>` — writing `{size=20}`
+        there renders the braces literally (this is what put "{size=20}ชุมชนผู้เล่น…{/size}"
+        on the title screen)
+    A literal `\\n` is left alone — the plugin's loader turns it into a real newline."""
+    v = v.replace("\\=", "=")
+    if not key.startswith(FUNGUS_NS):
+        return v
+    v = re.sub(r"<(size|color|link)=([^>]*)>", lambda m: "{" + m.group(1) + "=" + m.group(2) + "}", v)
     v = re.sub(r"</(size|color|link)>", lambda m: "{/" + m.group(1) + "}", v)
-    v = v.replace("<b>", "{b}").replace("</b>", "{/b}").replace("<i>", "{i}").replace("{/i}", "{/i}")
-    return v.replace("\\=", "=")
+    return (v.replace("<b>", "{b}").replace("</b>", "{/b}")
+             .replace("<i>", "{i}").replace("</i>", "{/i}"))
 
 
 def main():
@@ -76,7 +86,7 @@ def main():
             if len(misses) < 40:
                 misses.append((k, text[:60]))
             continue
-        val = to_native(hit[1])
+        val = to_native(hit[1], k)
         if not THAI.search(val):
             c["entry exists but not Thai"] += 1
             continue

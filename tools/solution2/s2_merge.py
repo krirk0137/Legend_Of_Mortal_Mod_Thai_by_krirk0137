@@ -61,8 +61,13 @@ def main():
         # a value must not carry the XUnity dictionary escape into the game
         if "\\=" in v:
             err["leftover XUnity \\= escape"] += 1
-        if "<size" in v or "</size>" in v:
-            err["UGUI tag form left in a Fungus string"] += 1
+        # The tag form must match the consumer, or the markup renders literally:
+        # Fungus (Story/, CombatTalking/) wants {size=20}; a UGUI Text wants <size=20>.
+        fungus = k.startswith(("Story/", "CombatTalking/"))
+        if fungus and re.search(r"<(?:/?)(?:size|color|link|b|i)[ =>]", v):
+            err["UGUI <tag> left in a Fungus string"] += 1
+        if not fungus and re.search(r"\{/?(?:size|color|link|b|i)[=}]", v):
+            err["Fungus {tag} left in a UGUI string"] += 1
     for x, n in err.most_common():
         print(f"  !! {x}: {n}")
 

@@ -175,7 +175,10 @@ namespace LomThaiText
                         continue;
                     }
 
-                    Fit(c as Text);
+                    // The project's own UI.resizer.txt is authoritative where it has a rule;
+                    // the generic fitter only covers what it does not.
+                    var ui2 = c as Text;
+                    if (ui2 != null && !Resizer.Apply(ui2, Resizer.PathOf(ui2.transform))) Fit(ui2);
 
                     if (os == null || fp == null || HasCjk(s)) continue;
                     if (fp.PropertyType != typeof(Font) || !fp.CanWrite) continue;
@@ -218,9 +221,14 @@ namespace LomThaiText
         private static readonly HashSet<int> _fitted = new HashSet<int>();
         private static int _fitLog = 6;
 
-        /// <summary>Thai is longer than the Chinese a label was laid out for. Let it shrink rather
-        /// than wrap onto a line the box then clips. Only touches labels that actually overflow,
-        /// and only once each.</summary>
+        /// <summary>Thai is longer than the Chinese a label was laid out for, so a short label can
+        /// wrap onto a line the box then clips. Shrink those — but ONLY those.
+        ///
+        /// The first version shrank anything whose text did not fit its rect, which was far too
+        /// broad: paragraphs inside a scroll view and vertical stacked labels overflow by design,
+        /// and they all collapsed to 8pt. So this now requires a genuinely single-line label,
+        /// refuses to go below 70% of the author's size, and gives up when the text is more than
+        /// twice the box — at that point shrinking would be unreadable anyway.</summary>
         private static void Fit(Text t)
         {
             if (!Plugin.OptFit || t == null) return;
@@ -228,23 +236,39 @@ namespace LomThaiText
             if (_fitted.Contains(id)) return;
             try
             {
+                var s = t.text;
                 var box = t.rectTransform.rect;
-                bool overflows = t.preferredWidth > box.width + 0.5f || t.preferredHeight > box.height + 0.5f;
-                if (!overflows) return;             // re-checked next sweep if the text changes
-                _fitted.Add(id);
+                int baseSize = t.resizeTextForBestFit ? Mathf.Max(t.resizeTextMaxSize, 1) : Mathf.Max(t.fontSize, 1);
+                int floor = Mathf.Max(Plugin.OptFitMin, Mathf.RoundToInt(baseSize * 0.7f));
 
-                if (!t.resizeTextForBestFit)
+                if (t.resizeTextForBestFit)
                 {
-                    t.resizeTextForBestFit = true;
-                    t.resizeTextMaxSize = Mathf.Max(t.fontSize, 1);
+                    // The game ships most labels with bestFit and a min size of 0, which is fine for
+                    // two Chinese glyphs and catastrophic for Thai — it shrinks to unreadable rather
+                    // than clip. Give it a floor; below that, let it overflow instead.
+                    if (t.resizeTextMinSize >= floor) return;
+                    _fitted.Add(id);
+                    t.resizeTextMinSize = floor;
                 }
-                if (t.resizeTextMinSize > Plugin.OptFitMin) t.resizeTextMinSize = Plugin.OptFitMin;
+                else
+                {
+                    if (s == null || s.IndexOf('\n') >= 0) return;      // multi-line: wrapping is intended
+                    if (t.verticalOverflow == VerticalWrapMode.Overflow) return;   // nothing gets clipped
+                    if (box.height > t.fontSize * 2.2f) return;         // a tall box is not a one-line label
+                    if (t.preferredWidth <= box.width + 0.5f) return;   // fits already
+                    if (t.preferredWidth > box.width * 2f) return;      // hopeless; leave the layout alone
+                    _fitted.Add(id);
+                    t.resizeTextForBestFit = true;
+                    t.resizeTextMaxSize = baseSize;
+                    t.resizeTextMinSize = floor;
+                }
                 t.SetAllDirty();
 
                 if (_fitLog-- > 0)
-                    Plugin.Log.LogInfo(string.Format("[fit] '{0}' box={1}x{2} needed={3}x{4} -> bestFit {5}..{6}",
-                        SafeName(t), (int)box.width, (int)box.height,
-                        (int)t.preferredWidth, (int)t.preferredHeight, t.resizeTextMinSize, t.resizeTextMaxSize));
+                    Plugin.Log.LogInfo(string.Format("[fit] '{0}' box={1}x{2} needed={3} -> bestFit {4}..{5}  '{6}'",
+                        SafeName(t), (int)box.width, (int)box.height, (int)t.preferredWidth,
+                        t.resizeTextMinSize, t.resizeTextMaxSize,
+                        s == null ? "" : (s.Length > 20 ? s.Substring(0, 20) : s)));
             }
             catch { }
         }

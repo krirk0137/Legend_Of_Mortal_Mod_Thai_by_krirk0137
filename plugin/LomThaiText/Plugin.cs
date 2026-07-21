@@ -93,6 +93,9 @@ namespace LomThaiText
             _tsvPath = Path.Combine(Path.GetDirectoryName(Info.Location), file);
             LoadFile();
 
+            // The project's own resizer rules, which XUnity no longer applies to injected text.
+            Resizer.Load(Path.Combine(Paths.BepInExRootPath, @"Translation\th\Text\UI.resizer.txt"));
+
             try
             {
                 new Harmony(GUID).PatchAll(typeof(Patches));
