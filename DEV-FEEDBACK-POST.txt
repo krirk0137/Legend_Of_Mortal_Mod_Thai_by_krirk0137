@@ -6,8 +6,8 @@
 
 ลิงก์ที่ต้องเติม:
   GitHub  : https://github.com/krirk0137/Legend_Of_Mortal_Mod_Thai_by_krirk0137
-  Nexus   : (ใส่หลังอัปโหลดเสร็จ)
-  YouTube : (ใส่หลังอัปคลิปเสร็จ)
+  Nexus   : https://www.nexusmods.com/legendofmortal/mods/4
+  YouTube : https://youtu.be/E5H7lf9kGrU
 
 
 ---------------------------------------------------------------------
@@ -20,8 +20,8 @@ A while back I posted asking whether the game could be made easier to mod for
 translations. I said I'd try with some AI help. I did, and it's done:
 
   GitHub   https://github.com/krirk0137/Legend_Of_Mortal_Mod_Thai_by_krirk0137
-  Nexus    (link)
-  Video    (link)
+  Nexus    https://www.nexusmods.com/legendofmortal/mods/4
+  Video    https://youtu.be/E5H7lf9kGrU
 
 Free, non-commercial, credited to the English base translation by velvetcakes1
 that I built on top of. It covers 71,523 of the game's 72,883 text entries
@@ -66,8 +66,8 @@ there. Thanks for making a game worth spending a few hundred hours translating.
 我试了，而且已经做完了：
 
   GitHub   https://github.com/krirk0137/Legend_Of_Mortal_Mod_Thai_by_krirk0137
-  Nexus    （链接）
-  视频      （链接）
+  Nexus    https://www.nexusmods.com/legendofmortal/mods/4
+  视频      https://youtu.be/E5H7lf9kGrU
 
 完全免费、非商业用途，并保留了我所基于的 velvetcakes1 英文翻译的署名。
 覆盖了游戏 72,883 条文本中的 71,523 条（98.13%）—— 包括全部17章剧情、
@@ -108,8 +108,8 @@ LeanLocalization 本身就支持这个机制——后注册的来源会自动覆
 我試了，而且已經做完了：
 
   GitHub   https://github.com/krirk0137/Legend_Of_Mortal_Mod_Thai_by_krirk0137
-  Nexus    （連結）
-  影片      （連結）
+  Nexus    https://www.nexusmods.com/legendofmortal/mods/4
+  影片      https://youtu.be/E5H7lf9kGrU
 
 完全免費、非商業用途，並保留了我所基於的 velvetcakes1 英文翻譯的署名。
 涵蓋了遊戲 72,883 條文本中的 71,523 條（98.13%）—— 包含全部17章劇情、

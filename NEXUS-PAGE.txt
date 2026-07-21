@@ -1,6 +1,7 @@
 =====================================================================
  ข้อความสำหรับหน้า Nexus Mods — คัดลอกไปวางตามช่องด้านล่าง
  Nexus ใช้ BBCode (ไม่ใช่ Markdown) จัดรูปแบบไว้ให้แล้ว
+ หน้าจริง: https://www.nexusmods.com/legendofmortal/mods/4
 =====================================================================
 
 
@@ -157,7 +158,8 @@ To uninstall, delete BepInEx, winhttp.dll and doorstop_config.ini.
 
 ส่วนแปลไทย: [b]CC BY-NC 4.0[/b] · ส่วนแปลอังกฤษฐาน: [b]MIT (velvetcakes1)[/b]
 
-[center][url=https://github.com/krirk0137/Legend_Of_Mortal_Mod_Thai_by_krirk0137]ซอร์สโค้ดและรายละเอียดเชิงลึกทั้งหมดบน GitHub[/url][/center]
+[center][url=https://github.com/krirk0137/Legend_Of_Mortal_Mod_Thai_by_krirk0137]ซอร์สโค้ดและรายละเอียดเชิงลึกทั้งหมดบน GitHub[/url]
+[url=https://youtu.be/E5H7lf9kGrU]คลิปแนะนำ / วิธีติดตั้ง บน YouTube[/url][/center]
 
 
 =====================================================================
