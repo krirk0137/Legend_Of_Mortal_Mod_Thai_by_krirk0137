@@ -37,6 +37,9 @@ namespace LomThaiText
         internal static void Load(string path)
         {
             Loaded = true;
+            _rules.Clear();
+            _done.Clear();
+            _log = 8;
             if (!File.Exists(path))
             {
                 Plugin.Log.LogWarning("No UI.resizer.txt at " + path + " — labels keep the game's own sizing.");
