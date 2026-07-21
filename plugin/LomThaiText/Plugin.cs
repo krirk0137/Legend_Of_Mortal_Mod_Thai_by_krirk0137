@@ -306,6 +306,7 @@ namespace LomThaiText
             {
                 _nextSweep = Time.unscaledTime + Plugin.OptSweep;
                 Fonts.Sweep();
+                Unruled.FlushIfDue();
             }
 
             if (_probe1 > 0f && Time.unscaledTime >= _probe1) { _probe1 = -1f; Probe.Run("t12"); }
