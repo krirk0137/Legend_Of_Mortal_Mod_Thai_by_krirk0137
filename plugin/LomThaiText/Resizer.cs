@@ -94,6 +94,75 @@ namespace LomThaiText
             return true;
         }
 
+        /// <summary>Same rules, TextMeshPro components. These were invisible to the resizer until
+        /// now, which is why no AutoResize value could move the biography panel — it is TMP, and
+        /// so are the combat HUD and several headers.</summary>
+        internal static bool Apply(TMPro.TMP_Text t, string path)
+        {
+            if (_rules.Count == 0 || t == null) return false;
+            int id = t.GetInstanceID();
+            if (_done.Contains(id)) return true;
+
+            bool matched = false;
+            for (int i = 0; i < _rules.Count; i++)
+            {
+                var r = _rules[i];
+                if (!path.StartsWith(r.Path, StringComparison.Ordinal)) continue;
+                if (path.Length > r.Path.Length && path[r.Path.Length] != '/') continue;
+                matched = true;
+                try { RunTmp(t, r); }
+                catch (Exception e) { Plugin.Log.LogWarning("[resize/tmp] " + r.Op + " failed: " + e.Message); }
+            }
+            if (!matched) return false;
+
+            _done.Add(id);
+            try { t.SetAllDirty(); } catch { }
+            if (_logTmp-- > 0)
+                Plugin.Log.LogInfo(string.Format("[resize/tmp] {0} -> auto={1} {2}..{3}",
+                    path, t.enableAutoSizing, t.fontSizeMin, t.fontSizeMax));
+            return true;
+        }
+
+        private static int _logTmp = 8;
+
+        private static void RunTmp(TMPro.TMP_Text t, Rule r)
+        {
+            switch (r.Op)
+            {
+                case "AutoResize":
+                    t.enableAutoSizing = Bool(r.Args, 0, true);
+                    if (r.Args.Length > 1) t.fontSizeMin = Float(r.Args, 1, t.fontSizeMin);
+                    if (r.Args.Length > 2) t.fontSizeMax = Float(r.Args, 2, t.fontSizeMax);
+                    break;
+                case "ChangeFontSize":
+                    t.fontSize = Float(r.Args, 0, t.fontSize);
+                    break;
+                case "ChangeFontSizeByPercentage":
+                    t.fontSize = Mathf.Max(1f, t.fontSize * Float(r.Args, 0, 1f));
+                    break;
+                case "UGUI_ChangeLineSpacing":
+                    t.lineSpacing = Float(r.Args, 0, t.lineSpacing);
+                    break;
+                case "UGUI_HorizontalOverflow":
+                    t.enableWordWrapping = !Is(r.Args, "overflow");
+                    break;
+                case "UGUI_VerticalOverflow":
+                case "TMP_Overflow":
+                    t.overflowMode = Enum<TMPro.TextOverflowModes>(r.Args, t.overflowMode);
+                    break;
+                case "TMP_Alignment":
+                    t.alignment = Enum<TMPro.TextAlignmentOptions>(r.Args, t.alignment);
+                    break;
+            }
+        }
+
+        private static T Enum<T>(string[] a, T dflt) where T : struct
+        {
+            if (a.Length == 0) return dflt;
+            try { return (T)System.Enum.Parse(typeof(T), a[0], true); }
+            catch { return dflt; }
+        }
+
         private static void Run(Text t, Rule r)
         {
             switch (r.Op)
