@@ -51,6 +51,7 @@ namespace LomThaiText
         internal static KeyCode KeyDump = KeyCode.F11;
 
         private static string _tsvPath;
+        internal static string ResizerPath;
         private static string _lastReport = "";
         private static bool _dumped;
         private static int _bigApplies;
@@ -94,7 +95,8 @@ namespace LomThaiText
             LoadFile();
 
             // The project's own resizer rules, which XUnity no longer applies to injected text.
-            Resizer.Load(Path.Combine(Paths.BepInExRootPath, @"Translation\th\Text\UI.resizer.txt"));
+            ResizerPath = Path.Combine(Paths.BepInExRootPath, @"Translation\th\Text\UI.resizer.txt");
+            Resizer.Load(ResizerPath);
 
             try
             {
@@ -314,8 +316,9 @@ namespace LomThaiText
                 if (!Input.GetKey(KeyCode.LeftControl) && !Input.GetKey(KeyCode.RightControl)) return;
                 if (Input.GetKeyDown(Plugin.KeyReload))
                 {
-                    Plugin.Log.LogInfo("Ctrl+" + Plugin.KeyReload + " — reloading.");
+                    Plugin.Log.LogInfo("Ctrl+" + Plugin.KeyReload + " — reloading translations + resizer rules.");
                     Plugin.LoadFile();
+                    Resizer.Load(Plugin.ResizerPath);   // so UI.resizer.txt can be tuned live
                     LeanLocalization.UpdateTranslations();
                 }
                 else if (Input.GetKeyDown(Plugin.KeyDump)) Plugin.DumpLiveTable();
