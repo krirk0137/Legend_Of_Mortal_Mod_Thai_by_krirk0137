@@ -1,0 +1,140 @@
+=====================================================================
+ โพสต์อัปเดตถึงผู้พัฒนา — ต่อยอดจากโพสต์เดิมที่เคยขอให้เกม mod แปลง่ายขึ้น
+ มี 3 ภาษา: English / 简体中文 / 繁體中文
+ อย่าลืมเติมลิงก์ Nexus + YouTube ตรงที่วงเล็บไว้
+=====================================================================
+
+ลิงก์ที่ต้องเติม:
+  GitHub  : https://github.com/krirk0137/Legend_Of_Mortal_Mod_Thai_by_krirk0137
+  Nexus   : (ใส่หลังอัปโหลดเสร็จ)
+  YouTube : (ใส่หลังอัปคลิปเสร็จ)
+
+
+---------------------------------------------------------------------
+[ ENGLISH ]
+---------------------------------------------------------------------
+
+UPDATE: I finished the Thai translation — and here's what I learned about modding it
+
+A while back I posted asking whether the game could be made easier to mod for
+translations. I said I'd try with some AI help. I did, and it's done:
+
+  GitHub   https://github.com/krirk0137/Legend_Of_Mortal_Mod_Thai_by_krirk0137
+  Nexus    (link)
+  Video    (link)
+
+Free, non-commercial, credited to the English base translation by velvetcakes1
+that I built on top of. It covers 71,523 of the game's 72,883 text entries
+(98.13%) — all 17 chapters, menus, items, skills and UI, in wuxia-style Thai.
+
+I want to say clearly: the game itself is already built for this. Everything goes
+through LeanLocalization, every line has a stable key, and the story scripts bind
+speaker to line. That structure is genuinely good — it's what made a complete
+translation possible at all.
+
+The only hard part was that there's no supported way in.
+
+To get a line of Thai in front of a player, I had to extract the game's asset
+files to recover the key list, and write a BepInEx plugin that writes into
+LeanLocalization.CurrentTranslations at runtime. That works and touches no game
+file, but every translator has to rediscover it alone.
+
+One small feature would remove all of it:
+
+  Load any extra localisation CSV found in a folder next to the game
+  (e.g. Mortal_Data/Localization/), registering it as one more LeanSource.
+
+LeanLocalization already supports this — a later source simply overrides earlier
+ones. It's a handful of lines on your side, and it would let anyone translate the
+game into any language with nothing but a text editor. No asset extraction, no
+plugin, no risk to your files.
+
+If that's ever on the table, I'd be glad to help test it.
+
+P.S. Since last time I finished another route and somehow everyone died again. I
+still don't know what I did wrong. But at least the junior sister (小师妹) was
+there. Thanks for making a game worth spending a few hundred hours translating.
+
+
+---------------------------------------------------------------------
+[ 简体中文 ]
+---------------------------------------------------------------------
+
+【更新】泰语翻译完成了 —— 顺便分享一下做Mod时遇到的问题
+
+之前我发过一个帖子，问能不能让游戏更方便做翻译Mod，当时说打算用AI帮忙试试。
+我试了，而且已经做完了：
+
+  GitHub   https://github.com/krirk0137/Legend_Of_Mortal_Mod_Thai_by_krirk0137
+  Nexus    （链接）
+  视频      （链接）
+
+完全免费、非商业用途，并保留了我所基于的 velvetcakes1 英文翻译的署名。
+覆盖了游戏 72,883 条文本中的 71,523 条（98.13%）—— 包括全部17章剧情、
+菜单、道具、技能和UI，全部使用武侠风格的泰语。
+
+我想明确说一句：**游戏本身的结构其实非常适合做翻译。**
+所有文本都走 LeanLocalization，每一句都有稳定的键值，剧情脚本还把说话人和
+台词绑定在一起。这个结构是真的好——正因为如此，做出一个完整的翻译才成为可能。
+
+唯一困难的地方，是没有一个官方支持的入口。
+
+为了让一句泰语显示在玩家面前，我必须解包游戏资源文件才能拿到键值列表，
+再写一个 BepInEx 插件，在运行时写入 LeanLocalization.CurrentTranslations。
+这个方法可行，而且完全不修改游戏文件，但每一个想做翻译的人都得独自重新摸索一遍。
+
+其实只要一个很小的功能就能解决全部问题：
+
+  读取游戏目录下某个文件夹（例如 Mortal_Data/Localization/）中的
+  额外本地化 CSV，把它注册为一个额外的 LeanSource 即可。
+
+LeanLocalization 本身就支持这个机制——后注册的来源会自动覆盖先前的。
+对你们来说只是几行代码，却能让任何人只用一个文本编辑器，就把游戏翻译成任何语言。
+不需要解包、不需要插件、也不会对你们的文件造成任何风险。
+
+如果哪天有机会做这个功能，我很乐意帮忙测试。
+
+附言：上次之后我又打通了一条线，结果还是全员死光……我到现在也不知道自己
+哪里做错了。不过至少小师妹还在。感谢你们做出了一款值得我花几百个小时去翻译的游戏。
+
+
+---------------------------------------------------------------------
+[ 繁體中文 ]  ← 開發團隊是台灣的，用繁體可能更合適
+---------------------------------------------------------------------
+
+【更新】泰文翻譯完成了 —— 順便分享一下做Mod時遇到的問題
+
+之前我發過一篇文，問能不能讓遊戲更方便做翻譯Mod，當時說打算用AI幫忙試試看。
+我試了，而且已經做完了：
+
+  GitHub   https://github.com/krirk0137/Legend_Of_Mortal_Mod_Thai_by_krirk0137
+  Nexus    （連結）
+  影片      （連結）
+
+完全免費、非商業用途，並保留了我所基於的 velvetcakes1 英文翻譯的署名。
+涵蓋了遊戲 72,883 條文本中的 71,523 條（98.13%）—— 包含全部17章劇情、
+選單、道具、技能與UI，全部使用武俠風格的泰文。
+
+我想明確說一句：**遊戲本身的結構其實非常適合做翻譯。**
+所有文字都走 LeanLocalization，每一句都有穩定的鍵值，劇情腳本還把說話者和
+台詞綁定在一起。這個結構真的很好——正因為如此，做出一個完整的翻譯才成為可能。
+
+唯一困難的地方，是沒有一個官方支援的入口。
+
+為了讓一句泰文顯示在玩家面前，我必須解包遊戲資源檔才能拿到鍵值列表，
+再寫一個 BepInEx 外掛，在執行時寫入 LeanLocalization.CurrentTranslations。
+這個方法可行，而且完全不修改遊戲檔案，但每一個想做翻譯的人都得獨自重新摸索一遍。
+
+其實只要一個很小的功能就能解決全部問題：
+
+  讀取遊戲目錄下某個資料夾（例如 Mortal_Data/Localization/）中的
+  額外在地化 CSV，把它註冊為一個額外的 LeanSource 即可。
+
+LeanLocalization 本身就支援這個機制——後註冊的來源會自動覆蓋先前的。
+對你們來說只是幾行程式碼，卻能讓任何人只用一個文字編輯器，
+就把遊戲翻譯成任何語言。不需要解包、不需要外掛，也不會對你們的檔案造成任何風險。
+
+如果哪天有機會做這個功能，我很樂意幫忙測試。
+
+附註：上次之後我又打通了一條線，結果還是全員死光……我到現在也不知道自己
+哪裡做錯了。不過至少小師妹還在。感謝你們做出了一款值得我花幾百個小時去翻譯的遊戲。
