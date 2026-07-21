@@ -178,7 +178,11 @@ namespace LomThaiText
                     // The project's own UI.resizer.txt is authoritative where it has a rule;
                     // the generic fitter only covers what it does not.
                     var ui2 = c as Text;
-                    if (ui2 != null && !Resizer.Apply(ui2, Resizer.PathOf(ui2.transform))) Fit(ui2);
+                    if (ui2 != null)
+                    {
+                        var p = Resizer.PathOf(ui2.transform);
+                        if (!Resizer.Apply(ui2, p)) { Unruled.Note(ui2, p); Fit(ui2); }
+                    }
 
                     if (os == null || fp == null || HasCjk(s)) continue;
                     if (fp.PropertyType != typeof(Font) || !fp.CanWrite) continue;
