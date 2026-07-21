@@ -1,3 +1,6 @@
+https://youtu.be/E5H7lf9kGrU
+https://www.nexusmods.com/legendofmortal/mods/4
+
 # Legend of Mortal — ภาษาไทย 🇹🇭 (活侠传 / 活俠傳)
 mod version 2.0
 game version 2025-10-10
