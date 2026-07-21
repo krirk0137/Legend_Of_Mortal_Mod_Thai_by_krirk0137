@@ -31,27 +31,38 @@ risk.py      # which gaps are unsafe to add as dict keys
 `\n` escape is **stripped** (our dict keys have no newline marker at all). Without the strip,
 23,521 real matches look like gaps.
 
-## Result: our coverage is 96.4%
+## Result: our coverage is 97.2%
 
-72,883 zh-cn keys. Matched to a Thai dictionary value: **70,253 (96.4%)**.
+> **⚠️ CORRECTED 2026-07-21.** The first pass reported 96.4% / 1,277 missing. It split
+> dictionary lines at the first `=` instead of the first **unescaped** `=`, so every
+> `<size\=NN>` key parsed as the bogus key `<size\` and ~700 already-translated lines
+> looked missing. Use `tools/v16/xkey.py` for any key parsing. Corrected numbers below;
+> `gap_worklist.tsv` still reflects the *old* pass, so re-derive it with `cov3.py` before
+> reusing it. See `tools/v16/README.md`.
+
+72,883 zh-cn keys. Matched to a Thai dictionary value: **70,856 (97.22%)** before v1.6,
+**71,387 (97.95%)** after it.
 Non-Thai values: 23 dict lines, of which only **2** hold real Chinese (`笑话，不过区区庸材罢了。`
 L22809, `那也是难能可贵了。` L24382) — the other 21 are punctuation-only (`……。` → `...`), fine as-is.
+Both real ones were translated in v1.6.
 
-**1,277 keys / 1,099 distinct texts are genuinely missing.** Full list: `gap_worklist.tsv`.
+**671 keys were genuinely missing** (not 1,277). v1.6 filled 555 of them; the remaining
+**137** are the classes the dictionary architecture cannot express — see below.
 
-| bucket | texts | what it is | fixable by dictionary? |
+| bucket | keys | what it is | status |
 |---|---|---|---|
-| `A-markup` | 644 | story lines wrapped in `{size=NN}` / `{color=}` / `{punch=}` | ✅ yes |
-| `A-plain` ≥5 chars | 261 | ordinary prose + **DiceHeader** | ✅ yes |
-| `A-plain` <5 chars | 108 | short choice headers (`结果`, `说服`, `逃脱`) | ⚠️ risky — see below |
-| `B-format` | 9 | `.NET` format templates (`近战伤害{0:N0}  爆击率{1:P0}`) | ❌ key-only |
-| `B-singlechar` | 77 | one-character values (`买` `你` `钱`; `上下左右`; vertical `唐/门/暗/器/总/纲`) | ❌ key-only |
+| `DiceHeader` | 389 | the caption above every choice in the game | ✅ **done in v1.6** |
+| story / misc prose | ~180 | incl. `{size=NN}`-wrapped lines and unlock conditions | ✅ **done in v1.6** |
+| single-character values | 98 | `System/Number_1=一`, `BattleKey/Up=上`, vertical `唐/门/暗/器/总/纲` | ❌ key-injection only |
+| `.NET` format templates | 5 | `近战伤害{0:N0}  爆击率{1:P0}` | ❌ key-injection only |
+| runtime variables / tokens | 3 | `{$var4}`, `{title}` | ❌ regex or key-injection |
 
 ### The single biggest visible gap: `DiceHeader`
 
 **389 of 398 keys missing → 288 distinct texts.** This is the caption above *every* choice in
 the game — `你的抉择` (×11), `由谁出战` (×9), `你的对手` (×8), `你的反应` (×14) … Only 7 of them
-ever reached the Google fallback, so the rest render as raw Chinese. One worker chunk fixes it.
+ever reached the Google fallback, so the rest render as raw Chinese. **Fixed in v1.6** — all
+398 keys now read Thai, translated as a single chunk so shared patterns stay consistent.
 
 ## The three things the dictionary architecture can never fix
 
@@ -131,7 +142,9 @@ logText.text = logText.text + log + "\n";     // appends to the SAME Text compon
 AutoTranslator re-scrapes an ever-growing string and compounds the language mix each round.
 No dictionary entry can ever match it. Two real fixes:
 
-1. `[Behaviour] GameLogTextPaths` = that component's UI path (no plugin needed), **or**
+1. `[Behaviour] GameLogTextPaths` = that component's UI path (no plugin needed) — **done in
+   v1.6**: `/[UI]/MainUI/Layer_2/GameLog/Viewport/Content`, read from the ripped `Combat.glb`
+   hierarchy (`tools/v16/glb.py`) and confirmed against a `Path :` line in the live log; **or**
 2. a Harmony prefix on `CombatUIManager.AddLog(string)` that translates `log` before it is
    appended — deterministic, and the only way to get it 100% right.
 

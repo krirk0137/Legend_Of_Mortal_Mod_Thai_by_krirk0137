@@ -117,6 +117,41 @@ the whole accumulated `_auto` file. Then:
    emits `\r\n`, so only the NAME token substitutes → `เตี่ยนชาง明珠` → Google → `เตี่ยนชางPearl`).
 3. Apply → `keydiff.pl` vs `.EN-BACKUP` = 0 → in-game test → v1.3.
 
+### ✅✅ v1.6 DONE (2026-07-21) — exhaustive gap-fill + JOB 2-A closed ✅✅
+Worklist came from the AssetRipper dump (`tools/solution2/`), so for the first time the gap
+list is the game's COMPLETE key set (72,883), not "whatever showed up in `_auto` while playing".
+Pipeline + all the traps: **`tools/v16/README.md`**. Snapshots `.PRE-V16` (dict + config).
+
+**Shipped:** 555 new dict entries — **288 DiceHeader** (the caption above EVERY choice;
+389/398 keys were missing, now 398/398) + 267 story/misc (incl. `解锁条件：银两>\=500` unlock
+lines, `<size\=50>` battle shouts, CombatInfo skill text) + 3 in-place fixes (2 leftover
+English lines; `<color=#FF7979>` → `<color\=#FF7979>` — that key never parsed, so the entry
+had NEVER worked). Coverage **97.22% → 97.95%**.
+
+**✅ JOB 2-A CLOSED.** `GameLogTextPaths=/[UI]/MainUI/Layer_2/GameLog/Viewport/Content`.
+Path read from the ripped `Combat.glb` scene hierarchy (`tools/v16/glb.py`) and confirmed
+against a `Path :` line in the live `LogOutput.log` — no in-game capture needed after all.
+Root cause confirmed in the decompiled source: `CombatUIManager.AddLog` does
+`logText.text += log`, and the log strings are hardcoded **Traditional** Chinese in
+`CombatManager.cs`, so no dictionary entry could ever have matched. **Not yet tested in-game.**
+
+**⚠️ TWO TOOLING BUGS THIS PASS — do not repeat:**
+1. **An XUnity dict line splits at the first UNESCAPED `=`.** A naive `line.find("=")` turns
+   `<size\=24>X</size>=...` into the key `<size\`. The first coverage pass did exactly that,
+   reported ~700 already-translated lines as missing, and 420 near-duplicates almost shipped.
+   Caught by a duplicate-key check, rolled back, re-applied. **Use `tools/v16/xkey.py`.**
+2. **A literal TAB inside a source string** (`Story/T_2_4_2_006`) split the key mid-sentence in
+   the TSV worker pipeline and put a truncated key in the dict. Removed by hand. Guard the
+   input with `awk -F'	' 'NF!=3'`.
+
+**Register needed no retroactive sweep** — every worker chunk carried the speaker+gender from
+`tools/speaker_map.tsv`; `v16_gender.py` found 1 violation in 977 lines (南宫浅, male, given
+`เจ้าค่ะ` — the same character v1.5 had to fix). v1.3/v1.5 needed 185/111-line sweeps.
+
+**⬜ REMAINING for v1.6:** in-game test (user), upload zip to GitHub Releases, tag `v1.6`.
+**137 keys still missing on purpose:** 98 single-CJK-char values, 5 format templates,
+3 runtime variables — all need key-based injection (Solution 2), see `tools/solution2/README.md`.
+
 ### ✅✅ JOB 3 DONE (2026-07-20) — SPEAKER-ATTRIBUTED register fix → v1.5 ✅✅
 **The "no speaker attribution" blocker is SOLVED.** The game ships its story as **Lua scripts**
 (1,631 of them, TextAssets in `Mortal_Data/resources.assets`) and its text as a **LeanLocalization
