@@ -25,3 +25,6 @@ desktop.ini
 
 # Release artifacts (uploaded to GitHub Releases, not committed)
 *.zip
+
+# --- AssetRipper dump (2.5 GB, regenerate with AssetRipper; see tools/solution2/README.md) ---
+AssetRipper_Solution2/
