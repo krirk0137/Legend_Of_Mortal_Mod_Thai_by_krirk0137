@@ -218,4 +218,26 @@ This mod is free and always will be. If it helped you, a coffee is very welcome.
 ดูสรุปเครดิตแบบเต็มได้ที่ [`CREDITS.md`](CREDITS.md)
 
 ---
+
+## 🖼️ ตัวอย่างในเกม / Screenshots
+
+ภาพจาก **v2.0** เกมเวอร์ชัน `1.0.5000.13` — เมนู เนื้อเรื่อง บทสนทนา และประวัติตัวละคร เป็นภาษาไทยทั้งหมด
+
+**หน้าเมนูหลัก**
+
+![หน้าเมนูหลักของ Legend of Mortal แปลไทย](assets/screenshots/01-title-screen.jpg)
+
+**หน้าจอหลักและบทสนทนา — ค่าสถานะ ปฏิทิน และเมนูเป็นไทยครบ**
+
+![สำนักถังและหน้าจอหลักภาษาไทยใน Legend of Mortal](assets/screenshots/02-sect-and-ui.jpg)
+
+**บทสรุปเนื้อเรื่อง — สำนวนกำลังภายในเต็มรูปแบบ**
+
+![บทสรุปเนื้อเรื่องภาษาไทยใน Legend of Mortal](assets/screenshots/03-story-recap.jpg)
+
+**ประวัติตัวละคร — ชื่อคนและสำนักถอดเป็นอักษรไทย**
+
+![ประวัติตัวละครถังโม่หลิงภาษาไทย](assets/screenshots/04-character-profile.jpg)
+
+---
 *Story updated for game version 1.0.5000.13 · Thai translation by Krirk0137*
