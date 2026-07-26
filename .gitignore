@@ -1,14 +1,38 @@
+# =====================================================================
+# สิ่งที่เผยแพร่ในรีโปนี้ = ตัวม็อดที่ผู้เล่นต้องใช้เท่านั้น
+#   Mod/ · plugin/ · assets/ · README / CREDITS / LICENSE / RELEASE-NOTES
+# ที่เหลือเป็นไฟล์งานส่วนตัวของผู้แปล — เก็บไว้ในเครื่อง ไม่ต้องขึ้น GitHub
+# =====================================================================
+
+# --- บันทึกงาน / คู่มือภายในของผู้แปล ---
+CLAUDE.md
+NEXT_STEPS.md
+THAI_FONT_TEST_README.md
+TMP_THAI_FONT_GUIDE.md
+
+# --- ชุดเครื่องมือแปล + คลังคำ + ข้อมูลผู้พูด (know-how ส่วนตัว) ---
+tools/
+
+# --- ร่างข้อความโปรโมต / แผนประชาสัมพันธ์ ---
+DEV-FEEDBACK-POST.txt
+FACEBOOK-POST.txt
+NEXUS-PAGE.txt
+YOUTUBE-PAGE.txt
+SEO-CHECKLIST.txt
+
+# --- สื่อ / เซฟเกม / ไฟล์ทดลองส่วนตัว ---
+Media/
+FirstEndGame/
+_progress/
+qwen_test/
+# josh StringTable-mod spike (kept locally to retry later; see memory)
+_poc/
+
 # --- Translation working backups (large; not needed by players) ---
 *.EN-BACKUP
 *.POST-*
 *.PRE-*
 *.gz
-
-# --- Translation-project working files ---
-_progress/
-qwen_test/
-# josh StringTable-mod spike (kept locally to retry later; see memory)
-_poc/
 
 # --- Claude / local session files ---
 .claude/
@@ -26,15 +50,9 @@ desktop.ini
 # Release artifacts (uploaded to GitHub Releases, not committed)
 *.zip
 
-# --- AssetRipper dump (2.5 GB, regenerate with AssetRipper; see tools/solution2/README.md) ---
+# --- AssetRipper dump (2.5 GB, regenerate with AssetRipper) ---
 AssetRipper_Solution2/
 
-# --- Solution 2 runtime dump (regenerate by launching the game; see plugin/README.md) ---
-tools/solution2/LomThaiText_dump.tsv
-
-# --- Solution 2 generated tables (rebuild: python tools/solution2/s2_full.py && s2_merge.py) ---
+# --- Solution 2 generated tables (rebuilt by the private tools/) ---
 plugin/LomThaiText/full/
-tools/solution2/s2_kv.json
-tools/solution2/s2_keysrc.json
 __pycache__/
-tools/solution2/update_worklist.tsv
