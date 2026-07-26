@@ -5,7 +5,8 @@
 
 📥 **[ดาวน์โหลดที่ Nexus Mods](https://www.nexusmods.com/legendofmortal/mods/4)** ·
 🎬 **[คลิปแนะนำ / วิธีติดตั้ง](https://youtu.be/E5H7lf9kGrU)** ·
-💾 **[ดาวน์โหลดที่ GitHub Releases](../../releases/latest)**
+💾 **[ดาวน์โหลดที่ GitHub Releases](../../releases/latest)** ·
+☕ **[สนับสนุนผู้แปล](#-สนับสนุนผู้แปล--support-the-translator)**
 
 mod version 2.0 · game version 2025-10-10
 
@@ -157,6 +158,17 @@ v1.5 ดึงข้อมูล "ใครพูดบทไหน" จาก�
 - นำไปแจกจ่าย/แชร์ต่อได้ **แต่ต้องให้เครดิต** Krirk0137 (ไทย) และ velvetcakes1 (อังกฤษ) เสมอ
   You may redistribute, but **you must keep the credits** to Krirk0137 (Thai) and velvetcakes1 (English).
 - ดูรายละเอียดสัญญาอนุญาตด้านล่าง (License)
+
+## ☕ สนับสนุนผู้แปล / Support the translator
+
+ม็อดนี้แจกฟรีและจะฟรีตลอดไป — ถ้าชอบและอยากเลี้ยงกาแฟสักแก้ว ขอบคุณมากครับ 🙏
+This mod is free and always will be. If it helped you, a coffee is very welcome.
+
+| | |
+|---|---|
+| 🇹🇭 **พร้อมเพย์ / PromptPay** | https://ezdn.app/krirk0137 |
+| 🌏 **Ko-fi** | https://ko-fi.com/krirk0137 |
+| 🌏 **Buy Me a Coffee** | https://buymeacoffee.com/krirk0137 |
 
 ---
 
