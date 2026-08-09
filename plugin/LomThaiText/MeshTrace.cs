@@ -19,7 +19,8 @@ namespace LomThaiText
             catch { return; }
 
             var raised = RaiseStackedTones(text, mesh);
-            if (!path.EndsWith("/Setting/Text", StringComparison.Ordinal)) return;
+            var horizontalShift = ShiftTargetHorizontally(text, mesh, path);
+            if (!IsTraceTarget(path, text.text)) return;
 
             try
             {
@@ -39,7 +40,11 @@ namespace LomThaiText
                     mesh.currentIndexCount));
                 Plugin.Log.LogInfo("[thai-mesh] glyphs " + GlyphReport(text));
                 Plugin.Log.LogInfo("[thai-mesh] quads " + QuadReport(text.text, generator.verts));
+                Plugin.Log.LogInfo("[thai-mesh] stacked " +
+                    StackedToneReport(text, generator.verts, mesh));
                 Plugin.Log.LogInfo("[thai-mesh] raisedStackedTones=" + raised);
+                Plugin.Log.LogInfo("[thai-mesh] horizontalShift=" +
+                    horizontalShift.ToString("0.##"));
             }
             catch (Exception e)
             {
@@ -47,11 +52,50 @@ namespace LomThaiText
             }
         }
 
+        private static float ShiftTargetHorizontally(
+            Text text,
+            VertexHelper mesh,
+            string path)
+        {
+            if (mesh.currentVertCount == 0 || text.rectTransform == null) return 0f;
+
+            var maxX = float.MinValue;
+            for (var index = 0; index < mesh.currentVertCount; index++)
+            {
+                var vertex = new UIVertex();
+                mesh.PopulateUIVertex(ref vertex, index);
+                maxX = Math.Max(maxX, vertex.position.x);
+            }
+
+            var shift = ThaiMeshAdjuster.GetOverflowShift(
+                path,
+                maxX,
+                text.rectTransform.rect.xMax);
+            if (shift == 0f) return 0f;
+
+            for (var index = 0; index < mesh.currentVertCount; index++)
+            {
+                var vertex = new UIVertex();
+                mesh.PopulateUIVertex(ref vertex, index);
+                vertex.position.x += shift;
+                mesh.SetUIVertex(vertex, index);
+            }
+            return shift;
+        }
+
+        private static bool IsTraceTarget(string path, string value)
+        {
+            return path.EndsWith("/Setting/Text", StringComparison.Ordinal) ||
+                   value.IndexOf("โชคชะตา", StringComparison.Ordinal) >= 0 ||
+                   value.IndexOf("ชื่อ", StringComparison.Ordinal) >= 0 ||
+                   value.IndexOf("เรื่อง", StringComparison.Ordinal) >= 0 ||
+                   value.IndexOf("อื่น", StringComparison.Ordinal) >= 0;
+        }
+
         private static int RaiseStackedTones(Text text, VertexHelper mesh)
         {
             var value = text.text;
-            if (string.IsNullOrEmpty(value) || value.IndexOf('<') >= 0 ||
-                value.IndexOf('\n') >= 0 || mesh.currentVertCount != value.Length * 4)
+            if (string.IsNullOrEmpty(value) || mesh.currentVertCount % 4 != 0)
                 return 0;
 
             var lift = Math.Max(1f, text.fontSize * 0.24f);
@@ -59,7 +103,12 @@ namespace LomThaiText
             for (var index = 0; index < value.Length; index++)
             {
                 if (!ThaiMeshAdjuster.ShouldRaiseTone(value, index)) continue;
-                var firstVertex = index * 4;
+                int quadIndex;
+                if (!ThaiMeshAdjuster.TryGetQuadIndex(
+                    value, index, text.supportRichText, out quadIndex))
+                    continue;
+                var firstVertex = quadIndex * 4;
+                if (firstVertex + 3 >= mesh.currentVertCount) continue;
                 for (var offset = 0; offset < 4; offset++)
                 {
                     var vertex = new UIVertex();
@@ -70,6 +119,66 @@ namespace LomThaiText
                 raised++;
             }
             return raised;
+        }
+
+        private static string StackedToneReport(
+            Text text,
+            IList<UIVertex> generated,
+            VertexHelper mesh)
+        {
+            var result = new StringBuilder();
+            for (var index = 0; index < text.text.Length; index++)
+            {
+                if (!ThaiMeshAdjuster.ShouldRaiseTone(text.text, index)) continue;
+                int quadIndex;
+                if (!ThaiMeshAdjuster.TryGetQuadIndex(
+                    text.text, index, text.supportRichText, out quadIndex))
+                    continue;
+                if (result.Length > 0) result.Append(" | ");
+                result.Append("i=").Append(index)
+                    .Append(" q=").Append(quadIndex)
+                    .Append(" upper=").Append(((int)text.text[index - 1]).ToString("X4"))
+                    .Append(" tone=").Append(((int)text.text[index]).ToString("X4"))
+                    .Append(" size=").Append(text.fontSize)
+                    .Append(" gen=").Append(GeneratedBounds(generated, quadIndex))
+                    .Append(" mesh=").Append(MeshBounds(mesh, quadIndex));
+            }
+            return result.Length == 0 ? "<none>" : result.ToString();
+        }
+
+        private static string GeneratedBounds(IList<UIVertex> vertices, int quadIndex)
+        {
+            var first = quadIndex * 4;
+            if (first < 0 || first + 3 >= vertices.Count) return "<missing>";
+            return Bounds(
+                vertices[first].position,
+                vertices[first + 1].position,
+                vertices[first + 2].position,
+                vertices[first + 3].position);
+        }
+
+        private static string MeshBounds(VertexHelper mesh, int quadIndex)
+        {
+            var first = quadIndex * 4;
+            if (first < 0 || first + 3 >= mesh.currentVertCount) return "<missing>";
+            var vertices = new UIVertex[4];
+            for (var offset = 0; offset < 4; offset++)
+                mesh.PopulateUIVertex(ref vertices[offset], first + offset);
+            return Bounds(
+                vertices[0].position,
+                vertices[1].position,
+                vertices[2].position,
+                vertices[3].position);
+        }
+
+        private static string Bounds(Vector3 a, Vector3 b, Vector3 c, Vector3 d)
+        {
+            var minX = Math.Min(Math.Min(a.x, b.x), Math.Min(c.x, d.x));
+            var maxX = Math.Max(Math.Max(a.x, b.x), Math.Max(c.x, d.x));
+            var minY = Math.Min(Math.Min(a.y, b.y), Math.Min(c.y, d.y));
+            var maxY = Math.Max(Math.Max(a.y, b.y), Math.Max(c.y, d.y));
+            return minX.ToString("0.##") + "," + minY.ToString("0.##") +
+                   ".." + maxX.ToString("0.##") + "," + maxY.ToString("0.##");
         }
 
         private static string GlyphReport(Text text)

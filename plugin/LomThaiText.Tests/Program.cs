@@ -44,6 +44,20 @@ internal static class Program
         Console.Error.WriteLine(name + ": expected '" + expected + "' in '" + actual + "'");
     }
 
+    private static void IntEqual(string name, int expected, int actual)
+    {
+        if (expected == actual) return;
+        _failed++;
+        Console.Error.WriteLine(name + ": expected " + expected + ", got " + actual);
+    }
+
+    private static void FloatEqual(string name, float expected, float actual)
+    {
+        if (Math.Abs(expected - actual) < 0.001f) return;
+        _failed++;
+        Console.Error.WriteLine(name + ": expected " + expected + ", got " + actual);
+    }
+
     private static string Codes(string value)
     {
         var parts = new string[value.Length];
@@ -184,6 +198,50 @@ internal static class Program
             (bool)method.Invoke(null, new object[] { text, 5 }));
     }
 
+    private static void TestQuadMappingSkipsSpacesNewlinesAndRichTextTags()
+    {
+        var method = typeof(ThaiMeshAdjuster).GetMethod(
+            "TryGetQuadIndex", BindingFlags.NonPublic | BindingFlags.Static);
+        True("Thai mesh quad mapper exists", method != null);
+        if (method == null) return;
+
+        var dialogue = "เจ้า เคยได้ยินชื่อ";
+        var dialogueArgs = new object[] { dialogue, dialogue.IndexOf("ชื่อ") + 2, true, -1 };
+        True("dialogue tone maps to a quad", (bool)method.Invoke(null, dialogueArgs));
+        IntEqual("spaces do not consume quads", 15, (int)dialogueArgs[3]);
+
+        var rich = "<b>ชื่อ</b>";
+        var richArgs = new object[] { rich, rich.IndexOf("ชื่อ") + 2, true, -1 };
+        True("rich-text tone maps to a quad", (bool)method.Invoke(null, richArgs));
+        IntEqual("rich-text tags do not consume quads", 2, (int)richArgs[3]);
+
+        var multiline = "เรื่อง\nชื่อ";
+        var multilineArgs = new object[] { multiline, multiline.LastIndexOf("ชื่อ") + 2, true, -1 };
+        True("multiline tone maps to a quad", (bool)method.Invoke(null, multilineArgs));
+        IntEqual("newline does not consume a quad", 8, (int)multilineArgs[3]);
+    }
+
+    private static void TestFatePopupShiftUsesRenderedOverflowForAnyWord()
+    {
+        var method = typeof(ThaiMeshAdjuster).GetMethod(
+            "GetOverflowShift", BindingFlags.NonPublic | BindingFlags.Static);
+        True("Thai mesh overflow shift helper exists", method != null);
+        if (method == null) return;
+
+        const string path =
+            "/[UI]/MainUI/Layer_5/StatModPlaceholder/NormalStat(Clone)/Title";
+        FloatEqual("future fate popup word shifts by measured overflow", -12f,
+            (float)method.Invoke(null, new object[] { path, 42f, 30f }));
+        FloatEqual("fate popup word that fits remains in place", 0f,
+            (float)method.Invoke(null, new object[] { path, 28f, 30f }));
+        const string mentalHeader =
+            "/[UI]/MainUI/Layer_3/ActionInfo/MentalBar/Header";
+        FloatEqual("mental header shifts left by measured overflow", -8f,
+            (float)method.Invoke(null, new object[] { mentalHeader, 38f, 30f }));
+        FloatEqual("other paths remain in place", 0f,
+            (float)method.Invoke(null, new object[] { "/Other/Title", 42f, 30f }));
+    }
+
     private static void TestMeshDiagnosticReportsExactThaiAndUnityCounts()
     {
         var type = typeof(Fonts).Assembly.GetType("LomThaiText.MeshDiagnostics");
@@ -238,6 +296,8 @@ internal static class Program
         TestAllPuaTextIsRepairedOnLaterSweep();
         TestPreRenderKeepsUnicodeForMeshAdjustment();
         TestOnlyStackedToneNeedsVerticalLift();
+        TestQuadMappingSkipsSpacesNewlinesAndRichTextTags();
+        TestFatePopupShiftUsesRenderedOverflowForAnyWord();
         TestMeshDiagnosticReportsExactThaiAndUnityCounts();
 
         Console.WriteLine(_failed == 0
