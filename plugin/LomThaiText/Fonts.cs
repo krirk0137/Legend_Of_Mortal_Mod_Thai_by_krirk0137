@@ -199,7 +199,15 @@ namespace LomThaiText
                         // The project's own UI.resizer.txt is authoritative where it has a rule;
                         // the generic fitter only covers what it does not.
                         var p = Resizer.PathOf(ui2.transform);
-                        if (!Resizer.Apply(ui2, p)) { Unruled.Note(ui2, p); Fit(ui2); }
+                        ApplyStoryDialogueColor(ui2, p);
+                        var resized = Resizer.Apply(ui2, p);
+                        var relationshipLayout = ApplyRelationshipPopupLayout(ui2, p);
+                        var statPopupLayout = ApplyStatPopupLayout(ui2, p);
+                        if (!resized && !relationshipLayout && !statPopupLayout)
+                        {
+                            Unruled.Note(ui2, p);
+                            Fit(ui2);
+                        }
                         if (shapingAttempted) continue;
                     }
 
@@ -271,10 +279,14 @@ namespace LomThaiText
                 bool shaped;
                 TryShapeLegacy(ui, value, out shaped);
 
+                string path;
+                try { path = Resizer.PathOf(ui.transform); } catch { path = ""; }
+                ApplyStoryDialogueColor(ui, path);
+                ApplyRelationshipPopupLayout(ui, path);
+                ApplyStatPopupLayout(ui, path);
+
                 if (_renderTraceLeft > 0)
                 {
-                    string path;
-                    try { path = Resizer.PathOf(ui.transform); } catch { path = ""; }
                     if (path.EndsWith("/Setting/Text", StringComparison.Ordinal))
                     {
                         _renderTraceLeft--;
@@ -285,6 +297,210 @@ namespace LomThaiText
                     }
                 }
             }
+        }
+
+        private static void ApplyStoryDialogueColor(Text ui, string path)
+        {
+            if (ui == null || !ThaiMeshAdjuster.ShouldForceWhiteStoryText(path)) return;
+            try
+            {
+                var color = ui.color;
+                if (color.r == 1f && color.g == 1f && color.b == 1f) return;
+                color.r = 1f;
+                color.g = 1f;
+                color.b = 1f;
+                ui.color = color;
+                ui.SetAllDirty();
+            }
+            catch { }
+        }
+
+        private static bool ApplyRelationshipPopupLayout(Text ui, string path)
+        {
+            const string relationshipTextPath =
+                "/[UI]/MainUI/Layer_5/RelationshipModPlaceholder/" +
+                "RelationshipStat(Clone)/Text";
+            if (ui == null || path != relationshipTextPath) return false;
+
+            try
+            {
+                var textRect = ui.rectTransform;
+                if (textRect == null) return false;
+
+                var targetWidth = Math.Max(
+                    textRect.rect.width,
+                    (float)Math.Ceiling(ui.preferredWidth));
+                var size = textRect.sizeDelta;
+                size.x = targetWidth;
+                textRect.sizeDelta = size;
+
+                ui.resizeTextForBestFit = false;
+                ui.horizontalOverflow = HorizontalWrapMode.Overflow;
+                ui.verticalOverflow = VerticalWrapMode.Overflow;
+
+                var parent = textRect.parent;
+                var icon = parent == null
+                    ? null
+                    : parent.Find("StatModifyIcon") as RectTransform;
+                if (icon != null)
+                {
+                    var iconPosition = icon.localPosition;
+                    iconPosition.x =
+                        textRect.localPosition.x +
+                        targetWidth * (1f - textRect.pivot.x) +
+                        icon.rect.width * icon.pivot.x;
+                    icon.localPosition = iconPosition;
+                }
+
+                ui.SetAllDirty();
+                return true;
+            }
+            catch { return false; }
+        }
+
+        internal static void ApplyTransientStatPopupLayout(Text ui)
+        {
+            if (ui == null) return;
+
+            try
+            {
+                if (!HasThai(ui.text)) return;
+                ApplyStatPopupLayoutCore(
+                    ui,
+                    Resizer.PathOf(ui.transform),
+                    false);
+            }
+            catch { }
+        }
+
+        private static bool ApplyStatPopupLayout(Text ui, string path)
+        {
+            return ApplyStatPopupLayoutCore(ui, path, true);
+        }
+
+        private static bool ApplyStatPopupLayoutCore(
+            Text ui,
+            string path,
+            bool markDirty)
+        {
+            const string statPopupRoot =
+                "/[UI]/MainUI/Layer_5/StatModPlaceholder/";
+            if (ui == null ||
+                string.IsNullOrEmpty(path) ||
+                !path.StartsWith(statPopupRoot, StringComparison.Ordinal))
+                return false;
+
+            try
+            {
+                var textRect = ui.rectTransform;
+                var row = textRect == null ? null : textRect.parent as RectTransform;
+                if (row == null) return false;
+
+                var normal = IsPopupRowName(row.name, "NormalStat");
+                var negativePositive =
+                    IsPopupRowName(row.name, "NegativePositiveStat");
+                var titleField =
+                    textRect.name == "Title";
+                var valueField =
+                    textRect.name == "Value";
+                if ((!normal || !titleField) &&
+                    (!negativePositive || (!titleField && !valueField)))
+                    return false;
+
+                SetRectWidth(row.Find("Title") as RectTransform, 90f);
+
+                var value = row.Find("Value") as RectTransform;
+                SetRectWidth(value, 60f);
+                SetAnchoredX(value, 183f);
+
+                if (normal)
+                {
+                    var bar = row.Find("Bar") as RectTransform;
+                    SetRectWidth(bar, 75f);
+                    SetAnchoredX(bar, 102f);
+                    SetAnchoredX(row.Find("Icon") as RectTransform, 139.5f);
+                }
+                else
+                {
+                    var slider = row.Find("Slider") as RectTransform;
+                    SetRectWidth(slider, 75f);
+                    SetAnchoredX(slider, 102f);
+
+                    if (slider != null)
+                    {
+                        var handleArea =
+                            slider.Find("Handle Slide Area") as RectTransform;
+                        SetRectWidth(handleArea, 73.4f);
+                        SetAnchoredX(handleArea, -3.4f);
+                    }
+
+                    var positiveBar =
+                        row.Find("PositiveBar") as RectTransform;
+                    var negativeBar =
+                        row.Find("NegativeBar") as RectTransform;
+                    SetRectWidth(positiveBar, 53f);
+                    SetAnchoredX(positiveBar, 115.4f);
+                    SetRectWidth(negativeBar, 53f);
+                    SetAnchoredX(negativeBar, 115.4f);
+                }
+
+                FitStatPopupText(
+                    ui,
+                    valueField ? 60f : 90f,
+                    markDirty);
+                return true;
+            }
+            catch { return false; }
+        }
+
+        private static bool IsPopupRowName(string actual, string prefab)
+        {
+            if (string.IsNullOrEmpty(actual)) return false;
+            return actual == prefab ||
+                   actual.StartsWith(
+                       prefab + "(Clone)",
+                       StringComparison.Ordinal);
+        }
+
+        private static void SetRectWidth(RectTransform rect, float width)
+        {
+            if (rect == null) return;
+            var size = rect.sizeDelta;
+            size.x = width;
+            rect.sizeDelta = size;
+        }
+
+        private static void SetAnchoredX(RectTransform rect, float x)
+        {
+            if (rect == null) return;
+            var position = rect.anchoredPosition;
+            position.x = x;
+            rect.anchoredPosition = position;
+        }
+
+        private static void FitStatPopupText(
+            Text ui,
+            float columnWidth,
+            bool markDirty)
+        {
+            const float horizontalPadding = 4f;
+            const int minimumReadableSize = 12;
+
+            ui.resizeTextForBestFit = false;
+            ui.horizontalOverflow = HorizontalWrapMode.Overflow;
+            ui.verticalOverflow = VerticalWrapMode.Overflow;
+
+            var availableWidth = columnWidth - horizontalPadding;
+            if (ui.fontSize > 0 && ui.preferredWidth > availableWidth)
+            {
+                var fittedSize = (int)Math.Floor(
+                    ui.fontSize * availableWidth / ui.preferredWidth);
+                ui.fontSize = Math.Max(
+                    minimumReadableSize,
+                    Math.Min(ui.fontSize, fittedSize));
+            }
+
+            if (markDirty) ui.SetAllDirty();
         }
 
         private static bool TryShapeLegacy(Text ui, string source, out bool shaped)

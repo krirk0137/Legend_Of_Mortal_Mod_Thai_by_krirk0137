@@ -269,6 +269,327 @@ internal static class Program
             "chars=7 visible=7 genVerts=32 meshVerts=28 indices=42", report);
     }
 
+    private static void TestOnlyStoryDialogueBodyIsForcedWhite()
+    {
+        var method = typeof(ThaiMeshAdjuster).GetMethod(
+            "ShouldForceWhiteStoryText", BindingFlags.NonPublic | BindingFlags.Static);
+        True("story dialogue white-style classifier exists", method != null);
+        if (method == null) return;
+
+        True("character dialogue body is white",
+            (bool)method.Invoke(null, new object[] {
+                "/StoryCore/SayDialogs/CharacterSayDialog/Panel/Background/StoryText"
+            }));
+        True("thought dialogue body is white",
+            (bool)method.Invoke(null, new object[] {
+                "/StoryCore/SayDialogs/ThinkSayDialog/Panel/Background/StoryText"
+            }));
+        True("narration body is white",
+            (bool)method.Invoke(null, new object[] {
+                "/StoryCore/SayDialogs/NarrativeSayDialog/Panel/Background/StoryText"
+            }));
+        True("center-screen narration body is white",
+            (bool)method.Invoke(null, new object[] {
+                "/StoryCore/SayDialogs/CenterNarrativeSayDialog/Panel/StoryText"
+            }));
+        False("speaker name keeps game styling",
+            (bool)method.Invoke(null, new object[] {
+                "/StoryCore/SayDialogs/CharacterSayDialog/Panel/Name/Title"
+            }));
+        False("other orange UI remains untouched",
+            (bool)method.Invoke(null, new object[] {
+                "/[UI]/TopPanel/StatusPanel/Container/Player/Title"
+            }));
+    }
+
+    private static void TestRelationshipPopupExpandsWithoutCoveringItsIcon()
+    {
+        var method = typeof(Fonts).GetMethod(
+            "ApplyRelationshipPopupLayout", BindingFlags.NonPublic | BindingFlags.Static);
+        True("relationship popup layout helper exists", method != null);
+        if (method == null) return;
+
+        var container = new RectTransform();
+        var label = NewText("ความชื่นชอบ", new Font { name = "adjusted" });
+        label.preferredWidth = 191f;
+        label.rectTransform = new RectTransform
+        {
+            name = "Text",
+            rect = new Rect { width = 80f, height = 50f },
+            sizeDelta = new Vector2 { x = 80f, y = 50f },
+            pivot = new Vector2 { x = 0f, y = 1f },
+            localPosition = new Vector3 { x = 91f, y = -15.79f }
+        };
+        label.transform = label.rectTransform;
+        container.AddChild(label.rectTransform);
+
+        var icon = new RectTransform
+        {
+            name = "StatModifyIcon",
+            rect = new Rect { width = 50f, height = 50f },
+            pivot = new Vector2 { x = 0.5f, y = 0.5f },
+            localPosition = new Vector3 { x = 175.2f, y = -40.4f }
+        };
+        container.AddChild(icon);
+
+        const string path =
+            "/[UI]/MainUI/Layer_5/RelationshipModPlaceholder/" +
+            "RelationshipStat(Clone)/Text";
+        True("relationship popup layout is applied",
+            (bool)method.Invoke(null, new object[] { label, path }));
+        FloatEqual("relationship label grows to its rendered width",
+            191f, label.rectTransform.sizeDelta.x);
+        IntEqual("relationship label stays on one line",
+            (int)HorizontalWrapMode.Overflow, (int)label.horizontalOverflow);
+        FloatEqual("relationship icon moves after the expanded label",
+            307f, icon.localPosition.x);
+    }
+
+    private static void TestRelationshipPopupLayoutLeavesOtherLabelsUntouched()
+    {
+        var method = typeof(Fonts).GetMethod(
+            "ApplyRelationshipPopupLayout", BindingFlags.NonPublic | BindingFlags.Static);
+        if (method == null) return;
+
+        var container = new RectTransform();
+        var label = NewText("ความชื่นชอบ", new Font { name = "adjusted" });
+        label.preferredWidth = 191f;
+        label.rectTransform = new RectTransform
+        {
+            name = "Text",
+            rect = new Rect { width = 80f, height = 50f },
+            sizeDelta = new Vector2 { x = 80f, y = 50f },
+            localPosition = new Vector3 { x = 91f }
+        };
+        label.transform = label.rectTransform;
+        container.AddChild(label.rectTransform);
+
+        var icon = new RectTransform
+        {
+            name = "StatModifyIcon",
+            rect = new Rect { width = 50f, height = 50f },
+            localPosition = new Vector3 { x = 175.2f }
+        };
+        container.AddChild(icon);
+
+        False("unrelated popup layout is ignored",
+            (bool)method.Invoke(null, new object[] {
+                label,
+                "/[UI]/MainUI/Layer_5/OtherPlaceholder/Other(Clone)/Text"
+            }));
+        FloatEqual("unrelated label width is unchanged",
+            80f, label.rectTransform.sizeDelta.x);
+        FloatEqual("unrelated icon position is unchanged",
+            175.2f, icon.localPosition.x);
+    }
+
+    private static void TestNormalStatPopupKeepsThaiTitleInsideItsRow()
+    {
+        var method = typeof(Fonts).GetMethod(
+            "ApplyStatPopupLayout", BindingFlags.NonPublic | BindingFlags.Static);
+        True("normal stat popup layout helper exists", method != null);
+        if (method == null) return;
+
+        var row = new RectTransform { name = "NormalStat(Clone)" };
+        var title = NewText("การบ่มเพาะตน", new Font { name = "adjusted" });
+        title.fontSize = 18;
+        title.preferredWidth = 132f;
+        title.rectTransform = new RectTransform
+        {
+            name = "Title",
+            rect = new Rect { width = 40f, height = 30f },
+            sizeDelta = new Vector2 { x = 40f, y = 30f },
+            anchoredPosition = new Vector2 { x = 7f, y = 0f }
+        };
+        title.transform = title.rectTransform;
+        row.AddChild(title.rectTransform);
+
+        var bar = new RectTransform
+        {
+            name = "Bar",
+            sizeDelta = new Vector2 { x = 120f, y = 14f },
+            anchoredPosition = new Vector2 { x = 57.2f, y = -7.3f }
+        };
+        row.AddChild(bar);
+        var icon = new RectTransform
+        {
+            name = "Icon",
+            sizeDelta = new Vector2 { x = 50f, y = 50f },
+            anchoredPosition = new Vector2 { x = 132.2f, y = 0f }
+        };
+        row.AddChild(icon);
+        var value = new RectTransform
+        {
+            name = "Value",
+            sizeDelta = new Vector2 { x = 40f, y = 28f },
+            anchoredPosition = new Vector2 { x = 209.5f, y = -0.8f }
+        };
+        row.AddChild(value);
+
+        const string path =
+            "/[UI]/MainUI/Layer_5/StatModPlaceholder/" +
+            "NormalStat(Clone)/Title";
+        True("normal stat title layout is applied",
+            (bool)method.Invoke(null, new object[] { title, path }));
+        FloatEqual("normal stat title gets a readable column",
+            90f, title.rectTransform.sizeDelta.x);
+        FloatEqual("normal stat bar moves after the title",
+            102f, bar.anchoredPosition.x);
+        FloatEqual("normal stat bar keeps a useful width",
+            75f, bar.sizeDelta.x);
+        FloatEqual("normal stat marker stays centered over its bar",
+            139.5f, icon.anchoredPosition.x);
+        FloatEqual("normal stat value gets a wider column",
+            60f, value.sizeDelta.x);
+        FloatEqual("normal stat value remains before the sign",
+            183f, value.anchoredPosition.x);
+        IntEqual("long Thai title is fitted but remains readable",
+            12, title.fontSize);
+        IntEqual("normal stat title stays on one line",
+            (int)HorizontalWrapMode.Overflow, (int)title.horizontalOverflow);
+    }
+
+    private static void TestNegativePositivePopupKeepsThaiValueOnOneLine()
+    {
+        var method = typeof(Fonts).GetMethod(
+            "ApplyStatPopupLayout", BindingFlags.NonPublic | BindingFlags.Static);
+        True("negative-positive popup layout helper exists", method != null);
+        if (method == null) return;
+
+        var row = new RectTransform { name = "NegativePositiveStat(Clone)" };
+        var title = new RectTransform
+        {
+            name = "Title",
+            sizeDelta = new Vector2 { x = 43.2f, y = 33.6f },
+            anchoredPosition = new Vector2 { x = 7f, y = 0f }
+        };
+        row.AddChild(title);
+
+        var slider = new RectTransform
+        {
+            name = "Slider",
+            sizeDelta = new Vector2 { x = 140f, y = 20f },
+            anchoredPosition = new Vector2 { x = 60.3f, y = -8.2f }
+        };
+        row.AddChild(slider);
+        var handleArea = new RectTransform
+        {
+            name = "Handle Slide Area",
+            sizeDelta = new Vector2 { x = 137f, y = 20f },
+            anchoredPosition = new Vector2 { x = -6.3f, y = -8.3f }
+        };
+        slider.AddChild(handleArea);
+        var positiveBar = new RectTransform
+        {
+            name = "PositiveBar",
+            sizeDelta = new Vector2 { x = 99f, y = 14f },
+            anchoredPosition = new Vector2 { x = 85.3f, y = -7.1f }
+        };
+        row.AddChild(positiveBar);
+        var negativeBar = new RectTransform
+        {
+            name = "NegativeBar",
+            sizeDelta = new Vector2 { x = 99f, y = 14f },
+            anchoredPosition = new Vector2 { x = 85.3f, y = -7.1f }
+        };
+        row.AddChild(negativeBar);
+
+        var value = NewText("ปานกลาง", new Font { name = "adjusted" });
+        value.fontSize = 18;
+        value.preferredWidth = 75f;
+        value.rectTransform = new RectTransform
+        {
+            name = "Value",
+            rect = new Rect { width = 50f, height = 55.06f },
+            sizeDelta = new Vector2 { x = 50f, y = 55.06f },
+            anchoredPosition = new Vector2 { x = 203.4f, y = 15.3f }
+        };
+        value.transform = value.rectTransform;
+        row.AddChild(value.rectTransform);
+
+        const string path =
+            "/[UI]/MainUI/Layer_5/StatModPlaceholder/" +
+            "NegativePositiveStat(Clone)/Value";
+        True("negative-positive value layout is applied",
+            (bool)method.Invoke(null, new object[] { value, path }));
+        FloatEqual("negative-positive title gets a readable column",
+            90f, title.sizeDelta.x);
+        FloatEqual("negative-positive slider moves after the title",
+            102f, slider.anchoredPosition.x);
+        FloatEqual("negative-positive slider keeps a useful width",
+            75f, slider.sizeDelta.x);
+        FloatEqual("slider handle area scales with its parent",
+            73.4f, handleArea.sizeDelta.x);
+        FloatEqual("positive bar scales with the slider",
+            53f, positiveBar.sizeDelta.x);
+        FloatEqual("negative bar scales with the slider",
+            53f, negativeBar.sizeDelta.x);
+        FloatEqual("negative-positive value gets a wider column",
+            60f, value.rectTransform.sizeDelta.x);
+        FloatEqual("negative-positive value remains before the sign",
+            183f, value.rectTransform.anchoredPosition.x);
+        IntEqual("Thai level value remains readable",
+            13, value.fontSize);
+        IntEqual("Thai level value stays on one line",
+            (int)HorizontalWrapMode.Overflow, (int)value.horizontalOverflow);
+    }
+
+    private static void TestTransientCloneVariantIsLaidOutBeforeFirstMesh()
+    {
+        var method = typeof(Fonts).GetMethod(
+            "ApplyTransientStatPopupLayout",
+            BindingFlags.NonPublic | BindingFlags.Static);
+        True("transient stat popup render hook exists", method != null);
+        if (method == null) return;
+
+        var uiRoot = new RectTransform { name = "[UI]" };
+        var mainUi = new RectTransform { name = "MainUI" };
+        var layer = new RectTransform { name = "Layer_5" };
+        var placeholder = new RectTransform { name = "StatModPlaceholder" };
+        var row = new RectTransform
+        {
+            name = "NegativePositiveStat(Clone)(Clone)"
+        };
+        uiRoot.AddChild(mainUi);
+        mainUi.AddChild(layer);
+        layer.AddChild(placeholder);
+        placeholder.AddChild(row);
+
+        var title = new RectTransform
+        {
+            name = "Title",
+            sizeDelta = new Vector2 { x = 43.2f, y = 33.6f }
+        };
+        row.AddChild(title);
+        var slider = new RectTransform
+        {
+            name = "Slider",
+            sizeDelta = new Vector2 { x = 140f, y = 20f }
+        };
+        row.AddChild(slider);
+
+        var value = NewText("ปานกลาง", new Font { name = "adjusted" });
+        value.fontSize = 18;
+        value.preferredWidth = 75f;
+        value.rectTransform = new RectTransform
+        {
+            name = "Value",
+            rect = new Rect { width = 50f, height = 55.06f },
+            sizeDelta = new Vector2 { x = 50f, y = 55.06f }
+        };
+        value.transform = value.rectTransform;
+        row.AddChild(value.rectTransform);
+
+        method.Invoke(null, new object[] { value });
+
+        FloatEqual("first mesh render widens the transient value",
+            60f, value.rectTransform.sizeDelta.x);
+        FloatEqual("first mesh render narrows the transient slider",
+            75f, slider.sizeDelta.x);
+        IntEqual("first mesh render prevents Thai value wrapping",
+            (int)HorizontalWrapMode.Overflow, (int)value.horizontalOverflow);
+    }
+
     private static int Main()
     {
         Equal("direct tone", "ค\uF70Aา", ThaiFontAdjuster.Adjust("ค่า"));
@@ -299,6 +620,12 @@ internal static class Program
         TestQuadMappingSkipsSpacesNewlinesAndRichTextTags();
         TestFatePopupShiftUsesRenderedOverflowForAnyWord();
         TestMeshDiagnosticReportsExactThaiAndUnityCounts();
+        TestOnlyStoryDialogueBodyIsForcedWhite();
+        TestRelationshipPopupExpandsWithoutCoveringItsIcon();
+        TestRelationshipPopupLayoutLeavesOtherLabelsUntouched();
+        TestNormalStatPopupKeepsThaiTitleInsideItsRow();
+        TestNegativePositivePopupKeepsThaiValueOnOneLine();
+        TestTransientCloneVariantIsLaidOutBeforeFirstMesh();
 
         Console.WriteLine(_failed == 0
             ? "PASS: integrated shaping tests"
@@ -317,7 +644,26 @@ namespace UnityEngine
 
     public class GameObject : Object { }
 
-    public class Transform : Object { }
+    public class Transform : Object
+    {
+        private readonly Dictionary<string, Transform> _children =
+            new Dictionary<string, Transform>(StringComparer.Ordinal);
+
+        public Transform parent;
+        public Vector3 localPosition;
+
+        public void AddChild(Transform child)
+        {
+            child.parent = this;
+            _children[child.name] = child;
+        }
+
+        public Transform Find(string childName)
+        {
+            Transform child;
+            return _children.TryGetValue(childName, out child) ? child : null;
+        }
+    }
 
     public class Component : Object
     {
@@ -338,15 +684,45 @@ namespace UnityEngine
 
     public class Material : Object { }
 
+    public struct Color
+    {
+        public float r;
+        public float g;
+        public float b;
+        public float a;
+    }
+
     public struct Rect
     {
         public float width;
         public float height;
     }
 
+    public struct Vector2
+    {
+        public float x;
+        public float y;
+    }
+
+    public struct Vector3
+    {
+        public float x;
+        public float y;
+        public float z;
+    }
+
     public class RectTransform : Transform
     {
         public Rect rect;
+        public Vector2 sizeDelta;
+        public Vector2 pivot;
+        public Vector2 anchoredPosition;
+    }
+
+    public enum HorizontalWrapMode
+    {
+        Wrap,
+        Overflow
     }
 
     public enum VerticalWrapMode
@@ -385,6 +761,7 @@ namespace UnityEngine.UI
     public class Graphic : Component
     {
         public int DirtyCount;
+        public Color color;
         public virtual void SetAllDirty() { DirtyCount++; }
     }
 
@@ -423,6 +800,7 @@ namespace UnityEngine.UI
         public int resizeTextMaxSize;
         public int resizeTextMinSize;
         public int fontSize = 24;
+        public HorizontalWrapMode horizontalOverflow;
         public VerticalWrapMode verticalOverflow;
         public float preferredWidth;
     }
@@ -493,7 +871,17 @@ namespace LomThaiText
 
     internal static class Resizer
     {
-        internal static string PathOf(Transform transform) { return ""; }
+        internal static string PathOf(Transform transform)
+        {
+            var path = "";
+            var guard = 0;
+            while (transform != null && guard++ < 24)
+            {
+                path = "/" + transform.name + path;
+                transform = transform.parent;
+            }
+            return path;
+        }
         internal static bool Apply(object component, string path) { return false; }
     }
 

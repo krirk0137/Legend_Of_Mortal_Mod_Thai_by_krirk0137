@@ -6,6 +6,14 @@ namespace LomThaiText
             "/[UI]/MainUI/Layer_5/StatModPlaceholder/NormalStat(Clone)/Title";
         private const string MentalHeaderPath =
             "/[UI]/MainUI/Layer_3/ActionInfo/MentalBar/Header";
+        private const string CharacterStoryTextPath =
+            "/StoryCore/SayDialogs/CharacterSayDialog/Panel/Background/StoryText";
+        private const string ThinkStoryTextPath =
+            "/StoryCore/SayDialogs/ThinkSayDialog/Panel/Background/StoryText";
+        private const string NarrativeStoryTextPath =
+            "/StoryCore/SayDialogs/NarrativeSayDialog/Panel/Background/StoryText";
+        private const string CenterNarrativeStoryTextPath =
+            "/StoryCore/SayDialogs/CenterNarrativeSayDialog/Panel/StoryText";
 
         internal static float GetOverflowShift(
             string path,
@@ -16,6 +24,14 @@ namespace LomThaiText
 
             var overflow = renderedMaxX - safeMaxX;
             return overflow > 0f ? -overflow : 0f;
+        }
+
+        internal static bool ShouldForceWhiteStoryText(string path)
+        {
+            return path == CharacterStoryTextPath ||
+                   path == ThinkStoryTextPath ||
+                   path == NarrativeStoryTextPath ||
+                   path == CenterNarrativeStoryTextPath;
         }
 
         internal static bool ShouldRaiseTone(string text, int index)

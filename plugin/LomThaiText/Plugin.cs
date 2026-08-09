@@ -350,6 +350,13 @@ namespace LomThaiText
         }
 
         [HarmonyPatch(typeof(UnityEngine.UI.Text), "OnPopulateMesh")]
+        [HarmonyPrefix]
+        private static void BeforeTextPopulate(UnityEngine.UI.Text __instance)
+        {
+            Fonts.ApplyTransientStatPopupLayout(__instance);
+        }
+
+        [HarmonyPatch(typeof(UnityEngine.UI.Text), "OnPopulateMesh")]
         [HarmonyPostfix]
         private static void AfterTextPopulate(UnityEngine.UI.Text __instance, UnityEngine.UI.VertexHelper __0)
         {
