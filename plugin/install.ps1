@@ -22,6 +22,8 @@ if ($LASTEXITCODE -ne 0) { throw 'build failed' }
 
 New-Item -ItemType Directory -Force $dest | Out-Null
 Copy-Item (Join-Path $src 'bin\Release\LomThaiText.dll') $dest -Force
+Copy-Item (Join-Path $src 'NotoSansThai-Regular-Adjusted.ttf') $dest -Force
+Copy-Item (Join-Path $src 'THIRD-PARTY-NOTICES.md') $dest -Force
 
 $destTsv = Join-Path $dest 'Thai.tsv'
 if ($Tsv) { Copy-Item $Tsv $destTsv -Force }

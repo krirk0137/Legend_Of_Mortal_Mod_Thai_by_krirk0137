@@ -24,25 +24,32 @@ namespace LomThaiText
         private static bool _tmpDone;
         private static Font _osFont;
         private static bool _osTried;
+        private static Font _thaiAdjustedFont;
         private static TMP_FontAsset _thaiTmp;
         private static int _diagLeft = 14;
         private static int _fixedUgui;
+        private static int _shapeInfoLogLeft = 8;
+        private static int _shapeFailureLogLeft = 8;
+        private static int _renderTraceLeft = 8;
+        private static List<Text> _thaiUgui = new List<Text>();
 
         private static readonly Dictionary<Type, PropertyInfo> _textProp = new Dictionary<Type, PropertyInfo>();
         private static readonly Dictionary<Type, PropertyInfo> _fontProp = new Dictionary<Type, PropertyInfo>();
 
+        internal static void InitializeThaiShaping(string pluginDir)
+        {
+            try { _thaiAdjustedFont = AdjustedThaiFont.Load(pluginDir); }
+            catch (Exception e) { Plugin.Log.LogError("[thai-shape] initialization failed: " + e); }
+        }
+
         internal static bool HasThai(string s)
         {
-            if (string.IsNullOrEmpty(s)) return false;
-            for (int i = 0; i < s.Length; i++) { int c = s[i]; if (c >= 0x0E00 && c <= 0x0E7F) return true; }
-            return false;
+            return ThaiFontAdjuster.HasThai(s);
         }
 
         private static bool HasCjk(string s)
         {
-            if (string.IsNullOrEmpty(s)) return false;
-            for (int i = 0; i < s.Length; i++) { int c = s[i]; if (c >= 0x3400 && c <= 0x9FFF) return true; }
-            return false;
+            return ThaiFontAdjuster.HasCjk(s);
         }
 
         // ------------------------------------------------------------------ TMP
@@ -124,6 +131,7 @@ namespace LomThaiText
         {
             InstallTmpFallback();
             var os = OsFont();
+            int shapedUgui = 0;
 
             try
             {
@@ -177,13 +185,22 @@ namespace LomThaiText
                         continue;
                     }
 
-                    // The project's own UI.resizer.txt is authoritative where it has a rule;
-                    // the generic fitter only covers what it does not.
+                    // Legacy UGUI does not apply Thai GSUB/GPOS positioning. Convert its Thai
+                    // clusters to the adjusted font's C90 private-use glyphs on every sweep,
+                    // because localization components can replace both text and font later.
                     var ui2 = c as Text;
                     if (ui2 != null)
                     {
+                        bool shaped;
+                        bool shapingAttempted = TryShapeLegacy(ui2, s, out shaped);
+                        if (shapingAttempted && !_thaiUgui.Contains(ui2)) _thaiUgui.Add(ui2);
+                        if (shaped) shapedUgui++;
+
+                        // The project's own UI.resizer.txt is authoritative where it has a rule;
+                        // the generic fitter only covers what it does not.
                         var p = Resizer.PathOf(ui2.transform);
                         if (!Resizer.Apply(ui2, p)) { Unruled.Note(ui2, p); Fit(ui2); }
+                        if (shapingAttempted) continue;
                     }
 
                     if (os == null || fp == null || HasCjk(s)) continue;
@@ -220,8 +237,137 @@ namespace LomThaiText
                     }
                     catch { }
                 }
+
+                if (shapedUgui > 0 && _shapeInfoLogLeft > 0)
+                {
+                    _shapeInfoLogLeft--;
+                    Plugin.Log.LogInfo("[thai-shape] shaped " + shapedUgui + " legacy UGUI Thai components");
+                }
             }
             catch (Exception e) { Plugin.Log.LogError("Sweep failed: " + e); }
+        }
+
+        /// <summary>
+        /// Localization/font components can overwrite Text after the periodic sweep.
+        /// Reapply cached Thai UGUI state at Unity's final canvas-render boundary.
+        /// </summary>
+        internal static void ShapeBeforeRender()
+        {
+            if (_thaiAdjustedFont == null) return;
+
+            for (int i = _thaiUgui.Count - 1; i >= 0; i--)
+            {
+                var ui = _thaiUgui[i];
+                if (ui == null)
+                {
+                    _thaiUgui.RemoveAt(i);
+                    continue;
+                }
+
+                string value;
+                try { value = ui.text; } catch { continue; }
+                if (!HasThai(value) || HasCjk(value)) continue;
+
+                bool shaped;
+                TryShapeLegacy(ui, value, out shaped);
+
+                if (_renderTraceLeft > 0)
+                {
+                    string path;
+                    try { path = Resizer.PathOf(ui.transform); } catch { path = ""; }
+                    if (path.EndsWith("/Setting/Text", StringComparison.Ordinal))
+                    {
+                        _renderTraceLeft--;
+                        if (path.Length > 160) path = path.Substring(path.Length - 160);
+                        Plugin.Log.LogInfo("[thai-shape] pre-render " + path
+                            + " font='" + (ui.font == null ? "<null>" : ui.font.name)
+                            + "' codes=" + Codepoints(ui.text));
+                    }
+                }
+            }
+        }
+
+        private static bool TryShapeLegacy(Text ui, string source, out bool shaped)
+        {
+            shaped = false;
+            if (ui == null || _thaiAdjustedFont == null || HasCjk(source)) return false;
+
+            string priorText = null;
+            Font priorFont = null;
+            Material priorMaterial = null;
+            bool attempted = false;
+            try
+            {
+                priorText = ui.text;
+                priorFont = ui.font;
+                priorMaterial = ui.material;
+                attempted = true;
+
+                // Keep the real Unicode marks. Runtime mesh evidence showed that the
+                // adjusted font's C90 PUA marks become tiny 2x2 baseline quads in this
+                // Unity build. MeshTrace positions stacked Unicode tones instead.
+                var adjusted = source;
+                bool changed = !string.Equals(ui.text, adjusted, StringComparison.Ordinal);
+                if (changed) ui.text = adjusted;
+
+                if (!ReferenceEquals(ui.font, _thaiAdjustedFont))
+                {
+                    ui.font = _thaiAdjustedFont;
+                    changed = true;
+                }
+
+                if (!ReferenceEquals(ui.material, ui.defaultMaterial))
+                {
+                    ui.material = null;
+                    changed = true;
+                }
+
+                if (changed) ui.SetAllDirty();
+                shaped = true;
+            }
+            catch (Exception e)
+            {
+                if (attempted)
+                {
+                    try { ui.text = priorText; } catch { }
+                    try { ui.font = priorFont; } catch { }
+                    try { ui.material = priorMaterial; } catch { }
+                    try { ui.SetAllDirty(); } catch { }
+                }
+
+                if (_shapeFailureLogLeft > 0)
+                {
+                    _shapeFailureLogLeft--;
+                    Plugin.Log.LogWarning("[thai-shape] component failed: " + BoundedMessage(e));
+                }
+            }
+            return attempted;
+        }
+
+        private static string Codepoints(string value)
+        {
+            if (string.IsNullOrEmpty(value)) return "<empty>";
+            var sb = new StringBuilder();
+            int count = Math.Min(value.Length, 24);
+            for (int i = 0; i < count; i++)
+            {
+                if (i > 0) sb.Append(' ');
+                sb.Append(((int)value[i]).ToString("X4"));
+            }
+            if (value.Length > count) sb.Append(" ...");
+            return sb.ToString();
+        }
+
+        private static string BoundedMessage(Exception exception)
+        {
+            const int maxLength = 240;
+            string message;
+            try { message = exception == null ? "" : exception.Message; }
+            catch { message = ""; }
+            if (string.IsNullOrEmpty(message))
+                message = exception == null ? "unknown failure" : exception.GetType().Name;
+            message = message.Replace("\r", "\\r").Replace("\n", "\\n");
+            return message.Length <= maxLength ? message : message.Substring(0, maxLength - 3) + "...";
         }
 
         private static readonly HashSet<int> _fitted = new HashSet<int>();
