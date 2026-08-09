@@ -45,10 +45,35 @@ plugin/
   LomThaiText/
     LomThaiText.csproj        net472; references the game's Managed DLLs + BepInEx core
     Plugin.cs                 the whole plugin
+    NotoSansThai-Regular-Adjusted.ttf
+                              process-private Thai font used by legacy UGUI
+    THIRD-PARTY-NOTICES.md    font and upstream license notices
     poc/Thai.tsv              the proof-of-concept probe set
 ```
 
-Installed layout: `BepInEx/plugins/LomThaiText/{LomThaiText.dll, Thai.tsv}`.
+Installed layout:
+`BepInEx/plugins/LomThaiText/{LomThaiText.dll, Thai.tsv, NotoSansThai-Regular-Adjusted.ttf, THIRD-PARTY-NOTICES.md}`.
+
+## Thai upper-vowel and tone-mark rendering
+
+Unity 2020 legacy `UnityEngine.UI.Text` emits Thai combining marks without Thai
+GSUB/GPOS positioning. In a cluster such as `ตั้`, the `ั` and `้` quads occupy the
+same vertical band. Earlier C90/PUA substitution attempts were also unreliable in
+this game: runtime mesh tracing showed the substituted `F714` and `F70A` glyphs
+collapsing to tiny `2×2` baseline quads.
+
+The plugin now keeps the real Unicode code points and patches
+`Text.OnPopulateMesh` to raise only a tone mark that follows an upper vowel. A
+standalone tone such as `่` in `ค่า` keeps the font's normal position. The fix was
+confirmed in game for `ตั้งค่า`; the runtime trace recorded:
+
+```text
+codes=0E15 0E31 0E49 0E07 0E04 0E48 0E32
+chars=8 visible=7 genVerts=28 meshVerts=28 indices=42
+raisedStackedTones=1
+```
+
+![Thai upper vowels and tone marks rendered in the settings screen](../assets/screenshots/05-thai-tone-marks-fixed.png)
 
 ## Thai.tsv format
 

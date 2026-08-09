@@ -29,7 +29,7 @@ namespace LomThaiText
     //  if it ever dies — the plugin component's own Update() was observed never to
     //  run in this game, so nothing may depend on it.
     // ---------------------------------------------------------------------------
-    [BepInPlugin(GUID, NAME, "0.4.0")]
+    [BepInPlugin(GUID, NAME, "0.5.2")]
     public class Plugin : BaseUnityPlugin
     {
         public const string GUID = "com.krirk0137.lomthaitext";
@@ -60,6 +60,9 @@ namespace LomThaiText
         private void Awake()
         {
             Log = Logger;
+            Fonts.InitializeThaiShaping(Path.GetDirectoryName(Info.Location));
+            Canvas.preWillRenderCanvases -= Fonts.ShapeBeforeRender;
+            Canvas.preWillRenderCanvases += Fonts.ShapeBeforeRender;
 
             OptEnabled = Config.Bind("General", "Enabled", true,
                 "Master switch. False = the plugin loads but injects nothing.").Value;
@@ -344,6 +347,20 @@ namespace LomThaiText
         {
             try { Plugin.Apply(); }
             catch (Exception e) { Plugin.Log.LogError("Apply() threw: " + e); }
+        }
+
+        [HarmonyPatch(typeof(UnityEngine.UI.Text), "OnPopulateMesh")]
+        [HarmonyPrefix]
+        private static void BeforeTextPopulate(UnityEngine.UI.Text __instance)
+        {
+            Fonts.ApplyTransientStatPopupLayout(__instance);
+        }
+
+        [HarmonyPatch(typeof(UnityEngine.UI.Text), "OnPopulateMesh")]
+        [HarmonyPostfix]
+        private static void AfterTextPopulate(UnityEngine.UI.Text __instance, UnityEngine.UI.VertexHelper __0)
+        {
+            MeshTrace.AfterPopulate(__instance, __0);
         }
     }
 
