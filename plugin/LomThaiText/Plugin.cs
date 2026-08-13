@@ -82,6 +82,10 @@ namespace LomThaiText
                 + "already Thai when it reaches the component — so the plugin handles it.").Value;
             OptFitMin = Config.Bind("Font", "MinFontSize", 8,
                 "Smallest font size AutoShrinkOverflow may shrink a label to.").Value;
+            ThaiShaping.Lift = Config.Bind("Font", "ToneMarkLift", 0.24f,
+                "Legacy UGUI does no Thai mark positioning, so a tone mark stacked on an upper "
+                + "vowel collides with it (ตั้ง, ชื่อ, เรื่อง, อื่น). Lift the mark by this "
+                + "fraction of the font size. 0 turns the correction off.").Value;
             OptSweep = Config.Bind("Font", "SweepSeconds", 1.0f,
                 "How often to re-scan for injected labels that need shrinking.").Value;
             OptAutoDump = Config.Bind("Debug", "AutoDumpOnce", true,
@@ -118,8 +122,9 @@ namespace LomThaiText
             }
             catch (Exception e) { Log.LogError("Harmony patch FAILED: " + e); }
 
-            // Installed after, and separately, so a broken diagnostic can never cost us the injector.
+            // Installed after, and separately, so neither can cost us the injector if it breaks.
             Leaks.Hook(harmony);
+            ThaiShaping.Hook(harmony);
 
             Log.LogInfo(string.Format("host component: go='{0}' activeInHierarchy={1} enabled={2} isActiveAndEnabled={3}",
                 gameObject == null ? "<null>" : gameObject.name,

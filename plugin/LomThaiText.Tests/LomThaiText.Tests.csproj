@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Compiles the REAL ThaiShaping.cs against minimal stand-ins for Unity and Harmony,
+       so the shaping logic can be exercised without launching the game.
+       Run it from the repo root against this project; it exits non-zero on any failure.
+       The command is in plugin/README.md. -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>LomThaiText.Tests</AssemblyName>
+    <RootNamespace>LomThaiText.Tests</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <NoWarn>CS0649;CS0169</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\LomThaiText\ThaiShaping.cs" />
+  </ItemGroup>
+
+</Project>

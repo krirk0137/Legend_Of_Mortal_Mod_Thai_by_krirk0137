@@ -56,3 +56,5 @@ AssetRipper_Solution2/
 # --- Solution 2 generated tables (rebuilt by the private tools/) ---
 plugin/LomThaiText/full/
 __pycache__/
+plugin/LomThaiText.Tests/bin/
+plugin/LomThaiText.Tests/obj/

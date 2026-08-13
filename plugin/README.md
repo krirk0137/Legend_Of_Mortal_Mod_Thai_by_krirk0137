@@ -49,6 +49,7 @@ plugin/
     Resizer.cs                UI.resizer.txt rules
     Unruled.cs                labels with no sizing rule — the sizing worklist
     Leaks.cs                  untranslated text found while playing — the translation worklist
+    ThaiShaping.cs            lifts tone marks stacked on upper vowels (ตั้ง, ชื่อ)
     Probe.cs                  one-off forensics
     poc/Thai.tsv              the proof-of-concept probe set
 ```
@@ -98,6 +99,38 @@ translation. If `GetTranslationText` ever moves, the log says so and the screen 
 Borrowed from **ENMod Continued** (the 觅长生 Thai mod), which keeps a `MissedStrings.txt`
 the same way. Its version scans rendered text only; resolving the key is what makes the
 output paste-able.
+
+## Thai tone marks — `ThaiShaping.cs`
+
+Unity's legacy UGUI `Text` emits a glyph quad per character but performs **no OpenType
+GPOS mark positioning**, which Thai needs. In `ตั้ง`, `ชื่อ`, `เรื่อง`, `อื่น` the tone
+mark and the upper vowel are laid out at the same height and collide. No amount of
+translation work can fix that — the text is right, the *layout* of it is wrong.
+
+A postfix on `Text.OnPopulateMesh` lifts the offending mark's four vertices by
+`fontSize × Font/ToneMarkLift` (default `0.24`, `0` disables). The original Unicode is
+untouched — no private-use glyph substitution, which collapses to tiny baseline quads in
+this game. Only marks *stacked on an upper vowel* move; `ข้า`, `เจ้า`, `ท่าน` are already
+correct and are left alone.
+
+Contributed by [@nemu90](https://github.com/nemu90) in
+[PR #2](https://github.com/krirk0137/Legend_Of_Mortal_Mod_Thai_by_krirk0137/pull/2).
+Taken as the shaping core only: the PR also carried per-screen layout constants as
+hardcoded scene paths, and those belong in `UI.resizer.txt`, where a tweak is a text edit
+plus Ctrl+F10 rather than a rebuild.
+
+## Tests
+
+`plugin/LomThaiText.Tests` compiles the **real** `ThaiShaping.cs` against ~60 lines of
+Unity/Harmony stand-ins, so the shaping can be exercised without launching the game:
+
+```bash
+dotnet run --project plugin/LomThaiText.Tests -c Release
+```
+
+27 checks: which marks lift and which must not, quad mapping across spaces and rich-text
+tags, and the bounds guards that stop a bad index from writing into the game's own mesh.
+Exits non-zero on failure.
 
 ## Build
 
