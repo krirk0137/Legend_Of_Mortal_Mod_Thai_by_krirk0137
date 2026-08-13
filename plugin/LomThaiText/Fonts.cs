@@ -136,6 +136,11 @@ namespace LomThaiText
 
                     string s;
                     try { s = tp.GetValue(c, null) as string; } catch { continue; }
+
+                    // Before the Thai filter, not after: a label that is still fully Chinese is
+                    // exactly what the leak report exists to find, and it has no Thai in it.
+                    if (Leaks.Enabled && Leaks.HasCjk(s)) Leaks.NoteOnScreen(c, s);
+
                     if (!HasThai(s)) continue;
 
                     var fp = FontPropOf(type);

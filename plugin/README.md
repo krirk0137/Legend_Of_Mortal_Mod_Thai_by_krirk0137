@@ -44,7 +44,12 @@ plugin/
   install.ps1                 build + copy into the live game (-Tsv <file>, -Uninstall)
   LomThaiText/
     LomThaiText.csproj        net472; references the game's Managed DLLs + BepInEx core
-    Plugin.cs                 the whole plugin
+    Plugin.cs                 config, loading, the RegisterAndBuild patch, hotkeys
+    Fonts.cs                  Thai font install + the per-frame component sweep
+    Resizer.cs                UI.resizer.txt rules
+    Unruled.cs                labels with no sizing rule — the sizing worklist
+    Leaks.cs                  untranslated text found while playing — the translation worklist
+    Probe.cs                  one-off forensics
     poc/Thai.tsv              the proof-of-concept probe set
 ```
 
@@ -60,11 +65,39 @@ use `\t`. (Same TSV hazard that truncated a key in v1.6.)
 
 | key | effect |
 |---|---|
+| **F8** | write the untranslated-text report now (it also autosaves every 5s) |
 | **F10** | re-read `Thai.tsv` and re-apply, without restarting the game |
 | **F11** | dump the game's entire **live** key→text table to `BepInEx/LomThaiText_dump.tsv` |
 
 The F11 dump is the ground truth for building the full file — it is what the game
 actually has in memory, not what a ripped asset says it should have.
+
+## The leak report — "what is still Chinese", found by playing
+
+`Leaks.cs` records untranslated text *as you play*, so finding the remaining gaps stops
+being a matter of walking the game and squinting at it. Two files under `BepInEx/`:
+
+| file | what it holds | how to act on it |
+|---|---|---|
+| `LomThaiText_missed_keys.tsv` | `key ⇥ hits ⇥ chinese` — every key the game asked for whose value is still Chinese, **sorted by hit count** | paste `key ⇥ thai` into `Thai.tsv`, press Ctrl+F10, done |
+| `LomThaiText_missed_screen.tsv` | `chinese ⇥ scene path` — Chinese visible on screen that never came through the key table | no key exists: string literals compiled into the game, or text composed at runtime. Needs a code patch or an XUnity dictionary line |
+
+The first file is the one that matters. Because the key net sits on
+`LeanLocalization.GetTranslationText`, it reports the **key** rather than the rendered
+text, and the hit count orders the worklist by what the player actually meets most —
+so the next hour of translating is spent where it shows.
+
+The second file is the honest accounting of what a key-based injector structurally
+cannot reach. Anything landing there is a JOB-4-class problem, not a missing `Thai.tsv` line.
+
+Both are deduped, capped (`Debug/TrackUntranslatedMax`, default 20 000), and can be turned
+off with `Debug/TrackUntranslated`. The key net is patched separately from the injector and
+its failure is swallowed — a diagnostic must never be able to take down the working
+translation. If `GetTranslationText` ever moves, the log says so and the screen net carries on.
+
+Borrowed from **ENMod Continued** (the 觅长生 Thai mod), which keeps a `MissedStrings.txt`
+the same way. Its version scans rendered text only; resolving the key is what makes the
+output paste-able.
 
 ## Build
 

@@ -49,6 +49,7 @@ namespace LomThaiText
         internal static bool OptDiag = true;
         internal static KeyCode KeyReload = KeyCode.F10;
         internal static KeyCode KeyDump = KeyCode.F11;
+        internal static KeyCode KeyLeaks = KeyCode.F8;
 
         private static string _tsvPath;
         internal static string ResizerPath;
@@ -88,8 +89,19 @@ namespace LomThaiText
                 + "populated. This is the ground truth for building the full translation file.").Value;
             OptDiag = Config.Bind("Debug", "LogInjectedComponents", true,
                 "Log the components found displaying injected text, with type and font.").Value;
+            Leaks.Enabled = Config.Bind("Debug", "TrackUntranslated", true,
+                "While you play, record every Chinese string the game still shows, to "
+                + "BepInEx/LomThaiText_missed_keys.tsv (by key, sorted by how often it was asked "
+                + "for) and BepInEx/LomThaiText_missed_screen.tsv (visible text with no key). "
+                + "This is the translation worklist — it replaces walking the game and eyeballing it.").Value;
+            Leaks.Cap = Config.Bind("Debug", "TrackUntranslatedMax", 20000,
+                "Stop recording after this many distinct entries, so a long session cannot grow "
+                + "without bound.").Value;
             KeyReload = Config.Bind("Hotkeys", "Reload", KeyCode.F10, "Ctrl + this key: reload the file.").Value;
             KeyDump = Config.Bind("Hotkeys", "Dump", KeyCode.F11, "Ctrl + this key: dump the live table.").Value;
+            KeyLeaks = Config.Bind("Hotkeys", "WriteLeakReport", KeyCode.F8,
+                "Ctrl + this key: write the untranslated-text report now, instead of waiting for "
+                + "the 5-second autosave.").Value;
 
             _tsvPath = Path.Combine(Path.GetDirectoryName(Info.Location), file);
             LoadFile();
@@ -98,12 +110,16 @@ namespace LomThaiText
             ResizerPath = Path.Combine(Paths.BepInExRootPath, @"Translation\th\Text\UI.resizer.txt");
             Resizer.Load(ResizerPath);
 
+            var harmony = new Harmony(GUID);
             try
             {
-                new Harmony(GUID).PatchAll(typeof(Patches));
+                harmony.PatchAll(typeof(Patches));
                 Log.LogInfo("Harmony patch on LeanLocalization.RegisterAndBuild installed.");
             }
             catch (Exception e) { Log.LogError("Harmony patch FAILED: " + e); }
+
+            // Installed after, and separately, so a broken diagnostic can never cost us the injector.
+            Leaks.Hook(harmony);
 
             Log.LogInfo(string.Format("host component: go='{0}' activeInHierarchy={1} enabled={2} isActiveAndEnabled={3}",
                 gameObject == null ? "<null>" : gameObject.name,
@@ -307,6 +323,7 @@ namespace LomThaiText
                 _nextSweep = Time.unscaledTime + Plugin.OptSweep;
                 Fonts.Sweep();
                 Unruled.FlushIfDue();
+                Leaks.FlushIfDue();
             }
 
             if (_probe1 > 0f && Time.unscaledTime >= _probe1) { _probe1 = -1f; Probe.Run("t12"); }
@@ -323,6 +340,11 @@ namespace LomThaiText
                     LeanLocalization.UpdateTranslations();
                 }
                 else if (Input.GetKeyDown(Plugin.KeyDump)) Plugin.DumpLiveTable();
+                else if (Input.GetKeyDown(Plugin.KeyLeaks))
+                {
+                    Leaks.Flush();
+                    Plugin.Log.LogInfo("Ctrl+" + Plugin.KeyLeaks + " — " + Leaks.Report() + ", written to BepInEx/.");
+                }
                 else if (Input.GetKeyDown(KeyCode.F9)) Probe.Run("manual");
             }
             catch (Exception e)
