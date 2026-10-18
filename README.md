@@ -8,12 +8,14 @@
 💾 **[ดาวน์โหลดที่ GitHub Releases](../../releases/latest)** ·
 ☕ **[สนับสนุนผู้แปล](#-สนับสนุนผู้แปล--support-the-translator)**
 
-mod version 3.0 · game version 1.0.6000.3 (DLC 崆峒神威)
+mod version 3.0.1 · game version 1.0.6000.3 (DLC 崆峒神威)
 
 **ม็อดแปลภาษาไทย (ไม่เป็นทางการ) สำหรับเกม Legend of Mortal (活侠传)**
 Unofficial **Thai translation mod** for **Legend of Mortal** — a complete Thai
 localization of the game (all 17 story chapters and the 崆峒神威 DLC, menus, items,
 skills and UI), translated directly from Simplified Chinese. Free, non-commercial.
+
+🆕 **v3.0.1** (2026-10-19) — **ชื่อเรียกในเนื้อเรื่องเดิมตรงกับ DLC แล้ว** — 231 บรรทัด: เสี่ยวเหมยเรียกตัวเองว่า **ข้าเหมย** ทุกที่ (เดิมปน เปิ่นเหมย/เหมยข้า/ตัวเหมย) · **วิชาพิณผีผาเหล็ก** · **ลัทธิสุขาวดี** · **เนินหว้อหยุน** · **หอดาบเขาไฟ** · **ลง v3.0 อยู่แล้ว: วาง `Thai.tsv` ทับไฟล์เดียวพอ**
 
 🆕 **v3.0** (2026-10-18) — **แปล DLC 崆峒神威 ครบ** — เส้นเรื่องอวี๋เสี่ยวเหมย · อวี้จู๋ · เรื่องเสริมใหม่ · บันทึกตำนาน · วิชา/ไอเทมใหม่ **18,857 บรรทัดแปลด้วยมือ** สำนวนกำลังภายใน (แทนไทยแปลอัตโนมัติจาก Google) → ครอบคลุม **98.53%** ของทั้งเกมรวม DLC · แก้**วรรณยุกต์ชนสระบน** (ตั้ง · ชื่อ · เรื่อง) · **ลง v2.0.1 อยู่แล้ว: วางโฟลเดอร์ `BepInEx\plugins\LomThaiText\` ทับพอ**
 
@@ -179,7 +181,7 @@ This mod is free and always will be. If it helped you, a coffee is very welcome.
 
 ## 📥 วิธีติดตั้ง / Installation
 
-1. โหลด **`LegendOfMortal-Thai-by-Krirk0137-v3.0.zip`** จากหน้า
+1. โหลด **`LegendOfMortal-Thai-by-Krirk0137-v3.0.1.zip`** จากหน้า
    [**Releases**](../../releases/latest) แล้วแตกไฟล์ (extract)
    *(หรือกดปุ่มเขียว `<> Code` → Download ZIP แล้วใช้ทุกอย่างในโฟลเดอร์ `Mod/`)*
 2. คัดลอก **ทุกอย่างที่แตกออกมา** ไปวางในโฟลเดอร์เกมบน Steam
