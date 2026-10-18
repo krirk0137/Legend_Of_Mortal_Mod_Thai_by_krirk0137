@@ -8,14 +8,16 @@
 💾 **[ดาวน์โหลดที่ GitHub Releases](../../releases/latest)** ·
 ☕ **[สนับสนุนผู้แปล](#-สนับสนุนผู้แปล--support-the-translator)**
 
-mod version 2.0.1 · game version 1.0.6000.3 (DLC 崆峒神威)
+mod version 3.0 · game version 1.0.6000.3 (DLC 崆峒神威)
 
 **ม็อดแปลภาษาไทย (ไม่เป็นทางการ) สำหรับเกม Legend of Mortal (活侠传)**
 Unofficial **Thai translation mod** for **Legend of Mortal** — a complete Thai
-localization of the game (all 17 story chapters, menus, items, skills and UI),
-translated directly from Simplified Chinese. Free, non-commercial.
+localization of the game (all 17 story chapters and the 崆峒神威 DLC, menus, items,
+skills and UI), translated directly from Simplified Chinese. Free, non-commercial.
 
-🆕 **v2.0.1** (2026-10-18) — **แก้ม็อดไม่ทำงานหลังเกมอัปเดต DLC 崆峒神威** — อัปเดตนี้เปลี่ยนตัวเกมเป็น **64-bit** แต่ตัวโหลดม็อด `winhttp.dll` ที่แจกมาตลอดเป็นรุ่น 32-bit → ภาษาไทยหายหมดแบบไม่มี error · **ลงม็อดอยู่แล้ว: เอา `winhttp.dll` ตัวใหม่ไปวางทับไฟล์เดียวพอ** · เนื้อหาใหม่ของ DLC (~19,400 บรรทัด) ยังไม่ได้แปล ตอนนี้ขึ้นเป็นไทยแปลอัตโนมัติจาก Google — กำลังแปลอยู่
+🆕 **v3.0** (2026-10-18) — **แปล DLC 崆峒神威 ครบ** — เส้นเรื่องอวี๋เสี่ยวเหมย · อวี้จู๋ · เรื่องเสริมใหม่ · บันทึกตำนาน · วิชา/ไอเทมใหม่ **18,857 บรรทัดแปลด้วยมือ** สำนวนกำลังภายใน (แทนไทยแปลอัตโนมัติจาก Google) → ครอบคลุม **98.53%** ของทั้งเกมรวม DLC · แก้**วรรณยุกต์ชนสระบน** (ตั้ง · ชื่อ · เรื่อง) · **ลง v2.0.1 อยู่แล้ว: วางโฟลเดอร์ `BepInEx\plugins\LomThaiText\` ทับพอ**
+
+🆕 **v2.0.1** (2026-10-18) — **แก้ม็อดไม่ทำงานหลังเกมอัปเดต DLC 崆峒神威** — อัปเดตนี้เปลี่ยนตัวเกมเป็น **64-bit** แต่ตัวโหลดม็อด `winhttp.dll` ที่แจกมาตลอดเป็นรุ่น 32-bit → ภาษาไทยหายหมดแบบไม่มี error · **ลงม็อดอยู่แล้ว: เอา `winhttp.dll` ตัวใหม่ไปวางทับไฟล์เดียวพอ**
 
 🆕 **v2.0** (2026-07-22) — **เปลี่ยนวิธีแปลทั้งระบบ** จาก "จับคู่ข้อความจีน" เป็น **"ใส่ตรงตามรหัสประจำบรรทัดของเกม"** → ครอบคลุม **98.13%** ของทั้งเกม, ปลดล็อกสิ่งที่วิธีเดิมทำไม่ได้เลย (`ปี 三` → **ปีที่ 3**, ปุ่ม 修/练 → **ฝึก/ฝน**, `近战伤害{0}` → **ความเสียหายประชิด 10**), แก้สำนวนชาย/หญิงเพิ่ม 66 จุด และ**รอดจากการอัปเดตเกมในอนาคต** — [รายละเอียดด้านล่าง](#-v20--เปลี่ยนวิธีแปลทั้งระบบ)
 
@@ -151,6 +153,7 @@ v1.5 ดึงข้อมูล "ใครพูดบทไหน" จาก�
 | ตัวเกม · Original game | 活侠传 / Legend of Mortal (卧龙工作室 / TeeTee Games) |
 | เครื่องมือ · Tooling | [BepInEx](https://github.com/BepInEx/BepInEx) · [XUnity.AutoTranslator](https://github.com/bbepis/XUnity.AutoTranslator) |
 | ฟอนต์ไทย TMP · Thai TMP font | **Kanit** — Cadson Demak / Google Fonts ([SIL OFL](https://openfontlicense.org)) |
+| แก้วรรณยุกต์ชนสระบน · Thai tone-mark fix | **@nemu90** — [PR #2](https://github.com/krirk0137/Legend_Of_Mortal_Mod_Thai_by_krirk0137/pull/2) |
 
 > ในเกมมีการใส่เครดิตไว้ที่หน้า **"ขอบคุณที่ร่วมเล่น"** (Thanks for playing) ตอนจบเกมด้วย
 
@@ -176,7 +179,7 @@ This mod is free and always will be. If it helped you, a coffee is very welcome.
 
 ## 📥 วิธีติดตั้ง / Installation
 
-1. โหลด **`LegendOfMortal-Thai-by-Krirk0137-v2.0.1.zip`** จากหน้า
+1. โหลด **`LegendOfMortal-Thai-by-Krirk0137-v3.0.zip`** จากหน้า
    [**Releases**](../../releases/latest) แล้วแตกไฟล์ (extract)
    *(หรือกดปุ่มเขียว `<> Code` → Download ZIP แล้วใช้ทุกอย่างในโฟลเดอร์ `Mod/`)*
 2. คัดลอก **ทุกอย่างที่แตกออกมา** ไปวางในโฟลเดอร์เกมบน Steam
@@ -242,4 +245,4 @@ This mod is free and always will be. If it helped you, a coffee is very welcome.
 ![ประวัติตัวละครถังโม่หลิงภาษาไทย](assets/screenshots/04-character-profile.jpg)
 
 ---
-*Story updated for game version 1.0.5000.13 · Thai translation by Krirk0137*
+*Story updated for game version 1.0.6000.3 (DLC 崆峒神威) · Thai translation by Krirk0137*
