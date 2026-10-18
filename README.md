@@ -8,12 +8,14 @@
 💾 **[ดาวน์โหลดที่ GitHub Releases](../../releases/latest)** ·
 ☕ **[สนับสนุนผู้แปล](#-สนับสนุนผู้แปล--support-the-translator)**
 
-mod version 2.0 · game version 2025-10-10
+mod version 2.0.1 · game version 1.0.6000.3 (DLC 崆峒神威)
 
 **ม็อดแปลภาษาไทย (ไม่เป็นทางการ) สำหรับเกม Legend of Mortal (活侠传)**
 Unofficial **Thai translation mod** for **Legend of Mortal** — a complete Thai
 localization of the game (all 17 story chapters, menus, items, skills and UI),
 translated directly from Simplified Chinese. Free, non-commercial.
+
+🆕 **v2.0.1** (2026-10-18) — **แก้ม็อดไม่ทำงานหลังเกมอัปเดต DLC 崆峒神威** — อัปเดตนี้เปลี่ยนตัวเกมเป็น **64-bit** แต่ตัวโหลดม็อด `winhttp.dll` ที่แจกมาตลอดเป็นรุ่น 32-bit → ภาษาไทยหายหมดแบบไม่มี error · **ลงม็อดอยู่แล้ว: เอา `winhttp.dll` ตัวใหม่ไปวางทับไฟล์เดียวพอ** · เนื้อหาใหม่ของ DLC (~19,400 บรรทัด) ยังไม่ได้แปล ตอนนี้ขึ้นเป็นไทยแปลอัตโนมัติจาก Google — กำลังแปลอยู่
 
 🆕 **v2.0** (2026-07-22) — **เปลี่ยนวิธีแปลทั้งระบบ** จาก "จับคู่ข้อความจีน" เป็น **"ใส่ตรงตามรหัสประจำบรรทัดของเกม"** → ครอบคลุม **98.13%** ของทั้งเกม, ปลดล็อกสิ่งที่วิธีเดิมทำไม่ได้เลย (`ปี 三` → **ปีที่ 3**, ปุ่ม 修/练 → **ฝึก/ฝน**, `近战伤害{0}` → **ความเสียหายประชิด 10**), แก้สำนวนชาย/หญิงเพิ่ม 66 จุด และ**รอดจากการอัปเดตเกมในอนาคต** — [รายละเอียดด้านล่าง](#-v20--เปลี่ยนวิธีแปลทั้งระบบ)
 
@@ -174,7 +176,7 @@ This mod is free and always will be. If it helped you, a coffee is very welcome.
 
 ## 📥 วิธีติดตั้ง / Installation
 
-1. โหลด **`LegendOfMortal-Thai-by-Krirk0137-v2.0.zip`** จากหน้า
+1. โหลด **`LegendOfMortal-Thai-by-Krirk0137-v2.0.1.zip`** จากหน้า
    [**Releases**](../../releases/latest) แล้วแตกไฟล์ (extract)
    *(หรือกดปุ่มเขียว `<> Code` → Download ZIP แล้วใช้ทุกอย่างในโฟลเดอร์ `Mod/`)*
 2. คัดลอก **ทุกอย่างที่แตกออกมา** ไปวางในโฟลเดอร์เกมบน Steam
@@ -189,7 +191,7 @@ This mod is free and always will be. If it helped you, a coffee is very welcome.
 > 🆕 v2.0 เพิ่มโฟลเดอร์ `BepInEx\plugins\LomThaiText\` มาด้วย (ปลั๊กอิน + ตารางคำแปล)
 > **ไม่ชอบก็ลบโฟลเดอร์นี้ทิ้งโฟลเดอร์เดียว** จะกลับไปเป็นพฤติกรรมแบบ v1.6 ทันที
 > ปลั๊กอิน**ไม่แก้ไฟล์ของตัวเกมเลย** ทุกอย่างเกิดในหน่วยความจำตอนเล่นเท่านั้น
-> ⚠️ ตัวเกมเป็น **32-bit** และค่า `FromLanguage` ต้องเป็น `zh-CN` (ตั้งมาให้แล้ว)
+> ⚠️ ตั้งแต่ DLC 崆峒神威 ตัวเกมเป็น **64-bit** → ต้องใช้ `winhttp.dll` จาก **v2.0.1 ขึ้นไป** (ของ v2.0 ลงไปเป็น 32-bit ม็อดจะไม่ทำงานเลย) และค่า `FromLanguage` ต้องเป็น `zh-CN` (ตั้งมาให้แล้ว)
 
 ## 🔤 ฟอนต์ / Font
 
